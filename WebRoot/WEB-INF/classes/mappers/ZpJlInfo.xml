@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ZpJlInfo">
+
+	<resultMap type="ZpJlInfo" id="zpJlInfoMap">
+	        	<id  column="jl_id" property="jlId"></id>
+	        	<result  column="name" property="name" />
+	        	<result  column="sex" property="sex" />
+	        	<result  column="job_id" property="jobId" />
+	        	<result  column="emal" property="emal" />
+	        	<result  column="phone" property="phone" />
+	        	<result  column="identity_card" property="identityCard" />
+	        	<result  column="marital_id" property="maritalId" />
+	        	<result  column="salary_require_id" property="salaryRequireId" />
+	        	<result  column="famous_company_update_status" property="famousCompanyUpdateStatus" />
+	        	<result  column="education_id" property="educationId" />
+	        	<result  column="SchoolTag" property="schoolTag" />
+	        	<result  column="in_person" property="inPerson" />
+	        	<result  column="in_time" property="inTime" />
+	        	<result  column="last_operator_time" property="lastOperatorTime" />
+	        	<result  column="job_start_time" property="jobStartTime" />
+	        	<result  column="import_status" property="importStatus" />
+	        	<result  column="job_position_id" property="jobPositionId" />
+	        	<result  column="job_position_level_id" property="jobPositionLevelId" />
+	        	<result  column="now_address" property="nowAddress" />
+	        	<result  column="top_specialty" property="topSpecialty" />
+	        	<result  column="birthday" property="birthday" />
+	        	<result  column="jlFilePath" property="jlFilePath" />
+	        	<result  column="jlContent" property="jlContent" />
+	        	<result  column="english_level_id" property="englishLevelId" />
+	        	<result  column="jl_expand_id" property="jlExpandId"/>
+	        	<result  column="technician_audit_person" property="technicianAuditPerson" />
+	        	<result  column="technician_audit_time" property="technicianAuditTime" />
+	        	<result  column="technician_audit_person_name" property="technicianAuditPersonName" />
+	        	<result  column="audit_type_id" property="auditTypeId" />
+ 		        <result  column="inPersonName" property="inPersonName" />
+ 		        <result  column="coord_x" property="coordX" />
+	        	<result  column="coord_y" property="coordY" />
+	        	<result  column="recommend_flow_status" property="recommendFlowStatus" />
+	        	<result column="hellp_person_id" property="hellpPersonId"/>
+	        	<result column="hellpPersonName" property="hellpPersonName"/>
+	        	
+	        	
+	        	<!-- 职位列表 -->
+				<collection ofType="ZpJlJobLevels" property="zpJlJobLevels">
+						<id  column="t_jl_job_level_id" property="jlJobLevelId"></id>
+			        	<result  column="t_jl_id" property="jlId" />
+			        	<result  column="t_job_level_id" property="jobLevelId" />
+				</collection>
+				
+	</resultMap>
+	
+	<!-- 查询 简历信息列表 -->
+	<select id="queryZpJlInfoList" resultMap="zpJlInfoMap">
+		SELECT
+						 		ji.jl_id,
+			        	
+						 		ji.name,
+			        	
+						 		ji.sex,
+			        	
+						 		ji.job_id,
+			        	
+						 		ji.emal,
+			        	
+						 		ji.phone,
+			        	
+						 		ji.identity_card,
+			        	
+						 		ji.marital_id,
+			        	
+						 		ji.salary_require_id,
+			        	
+						 		ji.famous_company_update_status,
+			        	
+						 		ji.education_id,
+			        	
+						 		ji.SchoolTag,
+			        	
+						 		ji.in_person,
+			        	
+						 		ji.in_time,
+			        	
+						 		ji.last_operator_time,
+			        	
+						 		ji.job_start_time,
+			        	
+						 		ji.import_status,
+			        	
+						 		ji.job_position_id,
+			        	
+						 		ji.job_position_level_id,
+			        	
+						 		ji.now_address,
+			        	
+						 		ji.english_level_id,
+			        	
+						 		ji.top_specialty,
+						 		
+						 		ji.birthday,
+					 			
+					 			ji.coord_x,
+						 		
+						 		ji.coord_y,
+						 		
+						 		zp_jl_job_levels.jl_job_level_id as t_jl_job_level_id,
+						 		
+						 		zp_jl_job_levels.jl_id as t_jl_id,
+						 		
+						 		zp_jl_job_levels.job_level_id as t_job_level_id,
+						 		
+						 		jei.jl_file_path as jlFilePath,
+						 		jei.jl_content as jlContent,
+						 		jei.jl_expand_id,
+						 		jei.technician_audit_person,			 		
+						 		jei.technician_audit_time,
+						 		jei.audit_type_id,
+						 		a.username as technician_audit_person_name,
+						 		a1.username as inPersonName,
+						 		jei.recommend_flow_status,
+						 		jei.hellp_person_id,
+						 		a2.username as hellpPersonName
+						 		
+		FROM
+			zp_jl_info ji LEFT JOIN zp_jl_job_levels  ON ji.jl_id = zp_jl_job_levels.jl_id 
+			LEFT JOIN zp_jl_expand_info jei ON ji.jl_id = jei.jl_id
+			left join account a on a.account_id = jei.technician_audit_person
+			left join account a1 on a1.account_id = ji.in_person
+			left join account a2 on a2.account_id = jei.hellp_person_id
+			
+		<where>
+				<if test="qtype != null and qtype=='like'">
+						<if test="nameT != null and nameT !='' ">
+				        		AND ji.name like '%${nameT}%'
+			        	</if>
+			        	 <if test="hellpPersonIdT != null and hellpPersonIdT ==1">
+				        		AND jei.hellp_person_id is not null  
+				        </if>
+				        <if test="hellpPersonIdT != null and hellpPersonIdT ==2">
+				        		AND jei.hellp_person_id is  null  
+				        </if>
+				</if>
+				
+							<if test="jlId != null and jlId !='' ">
+				        		AND ji.jl_id=#{jlId} 
+				        	</if>
+				        	<if test="name != null and name !='' ">
+				        		AND ji.name=#{name} 
+				        	</if>
+				        	<if test="sex != null and sex !='' ">
+				        		AND ji.sex=#{sex} 
+				        	</if>
+				        	<if test="jobId != null and jobId !='' ">
+				        		AND ji.job_id=#{jobId} 
+				        	</if>
+				        	<if test="emal != null and emal !='' ">
+				        		AND ji.emal=#{emal} 
+				        	</if>
+				        	<if test="phone != null and phone !='' ">
+				        		AND ji.phone=#{phone} 
+				        	</if>
+				        	<if test="identityCard != null and identityCard !='' ">
+				        		AND ji.identity_card=#{identityCard} 
+				        	</if>
+				        	<if test="maritalId != null and maritalId !='' ">
+				        		AND ji.marital_id=#{maritalId} 
+				        	</if>
+				        	<if test="salaryRequireId != null and salaryRequireId !='' ">
+				        		AND ji.salary_require_id=#{salaryRequireId} 
+				        	</if>
+				        	<if test="famousCompanyUpdateStatus != null and famousCompanyUpdateStatus !='' ">
+				        		AND ji.famous_company_update_status=#{famousCompanyUpdateStatus} 
+				        	</if>
+				        	<if test="educationId != null and educationId !='' ">
+				        		AND ji.education_id=#{educationId} 
+				        	</if>
+				        	<if test="schoolTag != null and schoolTag !='' ">
+				        		AND ji.SchoolTag=#{schoolTag} 
+				        	</if>
+				        	<if test="inPerson != null and inPerson !='' ">
+				        		AND ji.in_person=#{inPerson} 
+				        	</if>
+				        	<if test="inTime != null and inTime !='' ">
+				        		AND ji.in_time=#{inTime} 
+				        	</if>
+				        	<if test="lastOperatorTime != null and lastOperatorTime !='' ">
+				        		AND ji.last_operator_time=#{lastOperatorTime} 
+				        	</if>
+				        	<if test="jobStartTime != null and jobStartTime !='' ">
+				        		AND ji.job_start_time=#{jobStartTime} 
+				        	</if>
+				        	<if test="importStatus != null and importStatus !='' ">
+				        		AND ji.import_status=#{importStatus} 
+				        	</if>
+				        	<if test="jobPositionId != null and jobPositionId !='' ">
+				        		AND ji.job_position_id=#{jobPositionId} 
+				        	</if>
+				        	<if test="jobPositionLevelId != null and jobPositionLevelId !='' ">
+				        		AND ji.job_position_level_id=#{jobPositionLevelId} 
+				        	</if>
+				        	<if test="nowAddress != null and nowAddress !='' ">
+				        		AND ji.now_address=#{nowAddress} 
+				        	</if>
+				        	<if test="englishLevelId != null and englishLevelId !='' ">
+				        		AND ji.english_level_id=#{englishLevelId} 
+				        	</if>
+				        	<if test="topSpecialty != null and topSpecialty !='' ">
+				        		AND ji.top_specialty=#{topSpecialty} 
+				        	</if>
+				        	
+				        	<if test="technicianAuditPerson != null and technicianAuditPerson !='' ">
+				        		AND jei.technician_audit_person=#{technicianAuditPerson} 
+				        	</if>
+				        	<if test="auditTypeId != null and auditTypeId !='' ">
+				        		AND jei.audit_type_id=#{auditTypeId} 
+				        	</if>
+				        	
+				            <if test="recommendFlowStatus != null and recommendFlowStatus !='' ">
+				        		AND jei.recommend_flow_status=#{recommendFlowStatus} 
+				        	</if>
+				        	
+				        	
+				        	
+		</where>
+		ORDER BY ji.jl_id desc 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 简历信息列表条数 -->
+	<select id="getZpJlInfoListCount" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			zp_jl_info ji
+		 	LEFT JOIN zp_jl_expand_info jei ON ji.jl_id = jei.jl_id
+			
+		<where>
+				<if test="qtype != null and qtype=='like'">
+						<if test="nameT != null and nameT !='' ">
+				        		AND ji.name like '%${nameT}%'
+			        	</if>
+			        	 <if test="hellpPersonIdT != null and hellpPersonIdT ==1">
+				        		AND jei.hellp_person_id is not null  
+				        </if>
+				        <if test="hellpPersonIdT != null and hellpPersonIdT ==2">
+				        		AND jei.hellp_person_id is not null  
+				        </if>
+				</if>
+				<if test="startTimeT != null and startTimeT !='' ">
+				      <![CDATA[ AND (ji.in_time>#{startTimeT} AND ji.in_time<#{endTimeT}  ) ]]>	
+				 </if>
+				<if test="qtype != null and qtype=='uniqueValidate'">
+			           <choose>
+			              	<when test="phoneT != null and phoneT !='' and emalT != null and emalT !=''  ">
+				        		AND ( ji.phone=#{phoneT}  OR ji.emal=#{emalT})
+			        		</when>
+				        	<when test="(phoneT == null or phoneT !='') and emalT != null and emalT !='' ">
+					        		AND ji.emal=#{emalT} 
+				        	</when>
+				           <when test="(phoneT != null and phoneT !='' ) and (emalT == null or emalT !='') ">
+				        		AND ji.phone=#{phoneT} 
+			        	   </when>
+		               </choose>
+				</if>
+				<!-- 非自己，唯一验证 -->
+				<if test="notId != null and notId !=''">
+				        		AND ji.jl_id !=#{notId} 
+	        	</if>
+				        	<if test="name != null and name !=''">
+				        		AND ji.name=#{name} 
+				        	</if>
+				        	<if test="sex != null and sex !=''">
+				        		AND ji.sex=#{sex} 
+				        	</if>
+				        	<if test="jobId != null and jobId !=''">
+				        		AND ji.job_id=#{jobId} 
+				        	</if>
+				        	<if test="emal != null and emal !=''">
+				        		AND ji.emal=#{emal} 
+				        	</if>
+				        	<if test="phone != null and phone !=''">
+				        		AND ji.phone=#{phone} 
+				        	</if>
+				        	<if test="identityCard != null and identityCard !=''">
+				        		AND ji.identity_card=#{identityCard} 
+				        	</if>
+				        	<if test="maritalId != null and maritalId !=''">
+				        		AND ji.marital_id=#{maritalId} 
+				        	</if>
+				        	<if test="salaryRequireId != null and salaryRequireId !=''">
+				        		AND ji.salary_require_id=#{salaryRequireId} 
+				        	</if>
+				        	<if test="famousCompanyUpdateStatus != null and famousCompanyUpdateStatus !=''">
+				        		AND ji.famous_company_update_status=#{famousCompanyUpdateStatus} 
+				        	</if>
+				        	<if test="educationId != null and educationId !=''">
+				        		AND ji.education_id=#{educationId} 
+				        	</if>
+				        	<if test="schoolTag != null and schoolTag !=''">
+				        		AND ji.SchoolTag=#{schoolTag} 
+				        	</if>
+				        	<if test="inPerson != null and inPerson !=''">
+				        		AND ji.in_person=#{inPerson} 
+				        	</if>
+				        	<if test="inTime != null and inTime !=''">
+				        		AND ji.in_time=#{inTime} 
+				        	</if>
+				        	<if test="lastOperatorTime != null and lastOperatorTime !=''">
+				        		AND ji.last_operator_time=#{lastOperatorTime} 
+				        	</if>
+				        	<if test="jobStartTime != null and jobStartTime !=''">
+				        		AND ji.job_start_time=#{jobStartTime} 
+				        	</if>
+				        	<if test="importStatus != null and importStatus !=''">
+				        		AND ji.import_status=#{importStatus} 
+				        	</if>
+				        	<if test="jobPositionId != null and jobPositionId !=''">
+				        		AND ji.job_position_id=#{jobPositionId} 
+				        	</if>
+				        	<if test="jobPositionLevelId != null and jobPositionLevelId !=''">
+				        		AND ji.job_position_level_id=#{jobPositionLevelId} 
+				        	</if>
+				        	<if test="nowAddress != null and nowAddress !=''">
+				        		AND ji.now_address=#{nowAddress} 
+				        	</if>
+				        	<if test="englishLevelId != null and englishLevelId !=''">
+				        		AND ji.english_level_id=#{englishLevelId} 
+				        	</if>
+				        	<if test="topSpecialty != null and topSpecialty !=''">
+				        		AND ji.top_specialty=#{topSpecialty} 
+				        	</if>
+				        	<if test="technicianAuditPerson != null and technicianAuditPerson !='' ">
+				        		AND jei.technician_audit_person=#{technicianAuditPerson} 
+				        	</if>
+				        	<if test="auditTypeId != null and auditTypeId !='' ">
+				        		AND jei.audit_type_id=#{auditTypeId} 
+				        	</if>
+				        	 <if test="recommendFlowStatus != null and recommendFlowStatus !='' ">
+				        		AND jei.recommend_flow_status=#{recommendFlowStatus} 
+				        	</if>
+				        	
+		</where>
+	</select>
+	
+	
+	<!-- 添加 简历信息 -->
+	<insert id="addZpJlInfo" flushCache="true" useGeneratedKeys="true" keyProperty="jlId">
+		INSERT INTO zp_jl_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="name != null">
+		        		name,
+		        	</if>
+		        	<if test="sex != null">
+		        		sex,
+		        	</if>
+		        	<if test="jobId != null">
+		        		job_id,
+		        	</if>
+		        	<if test="emal != null">
+		        		emal,
+		        	</if>
+		        	<if test="phone != null">
+		        		phone,
+		        	</if>
+		        	<if test="identityCard != null">
+		        		identity_card,
+		        	</if>
+		        	<if test="maritalId != null">
+		        		marital_id,
+		        	</if>
+		        	<if test="salaryRequireId != null">
+		        		salary_require_id,
+		        	</if>
+		        	<if test="famousCompanyUpdateStatus != null">
+		        		famous_company_update_status,
+		        	</if>
+		        	<if test="educationId != null">
+		        		education_id,
+		        	</if>
+		        	<if test="schoolTag != null">
+		        		SchoolTag,
+		        	</if>
+		        	<if test="inPerson != null">
+		        		in_person,
+		        	</if>
+		        	<if test="inTime != null">
+		        		in_time,
+		        	</if>
+		        	<if test="lastOperatorTime != null">
+		        		last_operator_time,
+		        	</if>
+		        	<if test="jobStartTime != null">
+		        		job_start_time,
+		        	</if>
+		        	<if test="importStatus != null">
+		        		import_status,
+		        	</if>
+		        	<if test="jobPositionId != null">
+		        		job_position_id,
+		        	</if>
+		        	<if test="jobPositionLevelId != null">
+		        		job_position_level_id,
+		        	</if>
+		        	<if test="nowAddress != null">
+		        		now_address,
+		        	</if>
+		        	<if test="englishLevelId != null">
+		        		english_level_id,
+		        	</if>
+		        	<if test="topSpecialty != null">
+		        		top_specialty,
+		        	</if>
+		        	<if test="birthday != null">
+		        		birthday,
+		        	</if>
+		        	<if test="coordX != null">
+		        		coord_x,
+		        	</if>
+		        	<if test="coordY != null">
+		        		coord_y,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="name != null">
+			        		#{name},
+			        	</if>
+			        	<if test="sex != null">
+			        		#{sex},
+			        	</if>
+			        	<if test="jobId != null">
+			        		#{jobId},
+			        	</if>
+			        	<if test="emal != null">
+			        		#{emal},
+			        	</if>
+			        	<if test="phone != null">
+			        		#{phone},
+			        	</if>
+			        	<if test="identityCard != null">
+			        		#{identityCard},
+			        	</if>
+			        	<if test="maritalId != null">
+			        		#{maritalId},
+			        	</if>
+			        	<if test="salaryRequireId != null">
+			        		#{salaryRequireId},
+			        	</if>
+			        	<if test="famousCompanyUpdateStatus != null">
+			        		#{famousCompanyUpdateStatus},
+			        	</if>
+			        	<if test="educationId != null">
+			        		#{educationId},
+			        	</if>
+			        	<if test="schoolTag != null">
+			        		#{schoolTag},
+			        	</if>
+			        	<if test="inPerson != null">
+			        		#{inPerson},
+			        	</if>
+			        	<if test="inTime != null">
+			        		#{inTime},
+			        	</if>
+			        	<if test="lastOperatorTime != null">
+			        		#{lastOperatorTime},
+			        	</if>
+			        	<if test="jobStartTime != null">
+			        		#{jobStartTime},
+			        	</if>
+			        	<if test="importStatus != null">
+			        		#{importStatus},
+			        	</if>
+			        	<if test="jobPositionId != null">
+			        		#{jobPositionId},
+			        	</if>
+			        	<if test="jobPositionLevelId != null">
+			        		#{jobPositionLevelId},
+			        	</if>
+			        	<if test="nowAddress != null">
+			        		#{nowAddress},
+			        	</if>
+			        	<if test="englishLevelId != null">
+			        		#{englishLevelId},
+			        	</if>
+			        	<if test="topSpecialty != null">
+			        		#{topSpecialty},
+			        	</if>
+			        	<if test="birthday != null">
+			        		#{birthday},
+			        	</if>
+			        	<if test="coordX != null">
+				        	#{coordX},
+			        	</if>
+			        	<if test="coordY != null">
+			        		#{coordY},
+			        	</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 简历信息 -->
+	<update id="updateZpJlInfo" >
+		UPDATE  zp_jl_info
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="name != null">
+			        		name=#{name},
+			        	</if>
+			        	<if test="sex != null">
+			        		sex=#{sex},
+			        	</if>
+			        	<if test="jobId != null">
+			        		job_id=#{jobId},
+			        	</if>
+			        	<if test="emal != null">
+			        		emal=#{emal},
+			        	</if>
+			        	<if test="phone != null">
+			        		phone=#{phone},
+			        	</if>
+			        	<if test="identityCard != null">
+			        		identity_card=#{identityCard},
+			        	</if>
+			        	<if test="maritalId != null">
+			        		marital_id=#{maritalId},
+			        	</if>
+			        	<if test="salaryRequireId != null">
+			        		salary_require_id=#{salaryRequireId},
+			        	</if>
+			        	<if test="famousCompanyUpdateStatus != null">
+			        		famous_company_update_status=#{famousCompanyUpdateStatus},
+			        	</if>
+			        	<if test="educationId != null">
+			        		education_id=#{educationId},
+			        	</if>
+			        	<if test="schoolTag != null">
+			        		SchoolTag=#{schoolTag},
+			        	</if>
+			        	<if test="inPerson != null">
+			        		in_person=#{inPerson},
+			        	</if>
+			        	<if test="inTime != null">
+			        		in_time=#{inTime},
+			        	</if>
+			        	<if test="lastOperatorTime != null">
+			        		last_operator_time=#{lastOperatorTime},
+			        	</if>
+			        	<if test="jobStartTime != null">
+			        		job_start_time=#{jobStartTime},
+			        	</if>
+			        	<if test="importStatus != null">
+			        		import_status=#{importStatus},
+			        	</if>
+			        	<if test="jobPositionId != null">
+			        		job_position_id=#{jobPositionId},
+			        	</if>
+			        	<if test="jobPositionLevelId != null">
+			        		job_position_level_id=#{jobPositionLevelId},
+			        	</if>
+			        	<if test="nowAddress != null">
+			        		now_address=#{nowAddress},
+			        	</if>
+			        	<if test="englishLevelId != null">
+			        		english_level_id=#{englishLevelId},
+			        	</if>
+			        	<if test="topSpecialty != null">
+			        		top_specialty=#{topSpecialty},
+			        	</if>
+			        	<if test="coordX != null">
+			        		coord_x=#{coordX},
+			        	</if>
+			        	<if test="coordY != null">
+			        		coord_y=#{coordY},
+			        	</if>
+		</trim>
+		WHERE jl_id=#{jlId}
+	</update>
+
+	<!-- 删除  简历信息 -->
+	<delete id="deleteZpJlInfo">
+		DELETE FROM zp_jl_info 
+		<where>
+				        	<if test="jlId != null">
+				        		AND jl_id=#{jlId} 
+				        	</if>
+				        	<if test="name != null">
+				        		AND name=#{name} 
+				        	</if>
+				        	<if test="sex != null">
+				        		AND sex=#{sex} 
+				        	</if>
+				        	<if test="jobId != null">
+				        		AND job_id=#{jobId} 
+				        	</if>
+				        	<if test="emal != null">
+				        		AND emal=#{emal} 
+				        	</if>
+				        	<if test="phone != null">
+				        		AND phone=#{phone} 
+				        	</if>
+				        	<if test="identityCard != null">
+				        		AND identity_card=#{identityCard} 
+				        	</if>
+				        	<if test="maritalId != null">
+				        		AND marital_id=#{maritalId} 
+				        	</if>
+				        	<if test="salaryRequireId != null">
+				        		AND salary_require_id=#{salaryRequireId} 
+				        	</if>
+				        	<if test="famousCompanyUpdateStatus != null">
+				        		AND famous_company_update_status=#{famousCompanyUpdateStatus} 
+				        	</if>
+				        	<if test="educationId != null">
+				        		AND education_id=#{educationId} 
+				        	</if>
+				        	<if test="schoolTag != null">
+				        		AND SchoolTag=#{schoolTag} 
+				        	</if>
+				        	<if test="inPerson != null">
+				        		AND in_person=#{inPerson} 
+				        	</if>
+				        	<if test="inTime != null">
+				        		AND in_time=#{inTime} 
+				        	</if>
+				        	<if test="lastOperatorTime != null">
+				        		AND last_operator_time=#{lastOperatorTime} 
+				        	</if>
+				        	<if test="jobStartTime != null">
+				        		AND job_start_time=#{jobStartTime} 
+				        	</if>
+				        	<if test="importStatus != null">
+				        		AND import_status=#{importStatus} 
+				        	</if>
+				        	<if test="jobPositionId != null">
+				        		AND job_position_id=#{jobPositionId} 
+				        	</if>
+				        	<if test="jobPositionLevelId != null">
+				        		AND job_position_level_id=#{jobPositionLevelId} 
+				        	</if>
+				        	<if test="nowAddress != null">
+				        		AND now_address=#{nowAddress} 
+				        	</if>
+				        	<if test="englishLevelId != null">
+				        		AND english_level_id=#{englishLevelId} 
+				        	</if>
+				        	<if test="topSpecialty != null">
+				        		AND top_specialty=#{topSpecialty} 
+				        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  简历信息 -->
+	<select id="getZpJlInfoById" resultMap="zpJlInfoMap">
+		SELECT
+						 		ji.jl_id,
+						 		ji.name,
+						 		ji.sex,
+						 		ji.job_id,
+						 		ji.emal,
+						 		ji.phone,
+						 		ji.identity_card,
+						 		ji.marital_id,
+						 		ji.salary_require_id,
+						 		ji.famous_company_update_status,
+						 		ji.education_id,
+						 		ji.SchoolTag,
+						 		ji.in_person,
+						 		ji.in_time,
+						 		ji.last_operator_time,
+						 		ji.job_start_time,
+						 		ji.import_status,
+						 		ji.job_position_id,
+						 		ji.job_position_level_id,
+						 		ji.now_address,
+						 		ji.english_level_id,
+						 		ji.top_specialty,
+						 		ji.birthday,
+						 		ji.coord_x,
+						 		ji.coord_y,
+						 		zp_jl_job_levels.jl_job_level_id as t_jl_job_level_id,
+						 		zp_jl_job_levels.jl_id as t_jl_id,
+						 		zp_jl_job_levels.job_level_id as t_job_level_id,
+						 		jei.jl_file_path as jlFilePath,
+						 		jei.jl_content as jlContent,
+						 		jei.jl_expand_id,
+						 		jei.technician_audit_person,			 		
+						 		jei.technician_audit_time,
+						 		jei.audit_type_id,
+						 		a.username as technician_audit_person_name,
+						 		a1.username as inPersonName,
+						 		jei.recommend_flow_status,
+						 		jei.hellp_person_id,
+						 		a2.username as hellpPersonName
+						 		
+						 		
+		FROM
+			zp_jl_info ji LEFT JOIN zp_jl_job_levels  ON ji.jl_id = zp_jl_job_levels.jl_id 
+			LEFT JOIN zp_jl_expand_info jei ON ji.jl_id = jei.jl_id
+			left join account a on a.account_id = jei.technician_audit_person
+			left join account a1 on a1.account_id = ji.in_person
+		 	left join account a2 on a2.account_id = jei.hellp_person_id
+			
+		WHERE 
+		ji.jl_id=#{jlId}
+		<if test="inPerson != null and inPerson !='' ">
+        		AND ji.in_person=#{inPerson} 
+       	</if>
+	</select>
+	
+
+</mapper>

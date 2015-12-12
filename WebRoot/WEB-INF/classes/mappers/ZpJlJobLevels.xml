@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ZpJlJobLevels">
+
+	<resultMap type="ZpJlJobLevels" id="zpJlJobLevelsMap">
+	        	<id  column="jl_job_level_id" property="jlJobLevelId"></id>
+	        	<result  column="jl_id" property="jlId" />
+	        	<result  column="job_level_id" property="jobLevelId" />
+	</resultMap>
+	
+	<!-- 查询 简历职位级别列表列表 -->
+	<select id="queryZpJlJobLevelsList" resultMap="zpJlJobLevelsMap">
+		SELECT
+						 		zp_jl_job_levels.jl_job_level_id,
+			        	
+						 		zp_jl_job_levels.jl_id,
+			        	
+						 		zp_jl_job_levels.job_level_id
+			        	
+		FROM
+			zp_jl_job_levels
+		<where>
+							<if test="qtype != null and qtype=='like'">
+							</if>
+				        	<if test="jlId != null and jlId !='' ">
+				        		AND zp_jl_job_levels.jl_id=#{jlId} 
+				        	</if>
+				        	<if test="jobLevelId != null and jobLevelId !='' ">
+				        		AND zp_jl_job_levels.job_level_id=#{jobLevelId} 
+				        	</if>
+					
+					<if test="ids !=null">
+				         AND zp_jl_job_levels.jl_job_level_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+		ORDER BY zp_jl_job_levels.jl_job_level_id desc 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 简历职位级别列表列表条数 -->
+	<select id="getZpJlJobLevelsListCount" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			zp_jl_job_levels
+		<where>
+							<if test="qtype != null and qtype=='like'">
+							</if>
+				        	<if test="jlId != null and jlId !=''">
+				        		AND zp_jl_job_levels.jl_id=#{jlId} 
+				        	</if>
+				        	<if test="jobLevelId != null and jobLevelId !=''">
+				        		AND zp_jl_job_levels.job_level_id=#{jobLevelId} 
+				        	</if>
+				<if test="ids !=null">
+				         AND zp_jl_job_levels.jl_job_level_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+	</select>
+	
+	
+	<!-- 添加 简历职位级别列表 -->
+	<insert id="addZpJlJobLevels" flushCache="true" useGeneratedKeys="true" keyProperty="jlJobLevelId">
+		INSERT INTO zp_jl_job_levels
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="jlId != null">
+		        		jl_id,
+		        	</if>
+		        	<if test="jobLevelId != null">
+		        		job_level_id,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="jlId != null">
+			        		#{jlId},
+			        	</if>
+			        	<if test="jobLevelId != null">
+			        		#{jobLevelId},
+			        	</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 简历职位级别列表 -->
+	<update id="updateZpJlJobLevels" >
+		UPDATE  zp_jl_job_levels
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="jlId != null">
+			        		jl_id=#{jlId},
+			        	</if>
+			        	<if test="jobLevelId != null">
+			        		job_level_id=#{jobLevelId},
+			        	</if>
+		</trim>
+		WHERE jl_job_level_id=#{jlJobLevelId}
+	</update>
+
+	<!-- 删除  简历职位级别列表 -->
+	<delete id="deleteZpJlJobLevels">
+		DELETE FROM zp_jl_job_levels 
+		<where>
+				        	<if test="jlJobLevelId != null">
+				        		AND jl_job_level_id=#{jlJobLevelId} 
+				        	</if>
+				        	<if test="jlId != null">
+				        		AND jl_id=#{jlId} 
+				        	</if>
+				        	<if test="jobLevelId != null">
+				        		AND job_level_id=#{jobLevelId} 
+				        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  简历职位级别列表 -->
+	<select id="getZpJlJobLevelsById" resultMap="zpJlJobLevelsMap">
+		SELECT
+						 		zp_jl_job_levels.jl_job_level_id,
+						 		zp_jl_job_levels.jl_id,
+						 		zp_jl_job_levels.job_level_id
+		FROM
+			zp_jl_job_levels
+		WHERE 
+		zp_jl_job_levels.jl_job_level_id=#{jlJobLevelId}
+		
+	</select>
+
+</mapper>

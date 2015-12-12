@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ZpJlExpandInfo">
+
+	<resultMap type="ZpJlExpandInfo" id="zpJlExpandInfoMap">
+	        	<id  column="jl_expand_id" property="jlExpandId"></id>
+	        	<result  column="jl_id" property="jlId" />
+	        	<result  column="jl_file_path" property="jlFilePath" />
+	        	<result  column="jl_content" property="jlContent" />
+	        	<result  column="technician_audit_person" property="technicianAuditPerson" />
+	        	<result  column="technician_audit_time" property="technicianAuditTime" />
+	        	<result  column="audit_type_id" property="auditTypeId" />
+	        	<result column="recommend_flow_status" property="recommendFlowStatus"/>
+	        	<result column="hellp_person_id" property="hellpPersonId"/>
+	        	
+	</resultMap>
+	
+	<resultMap type="JlAuditPersonList" id="JlAuditPersonListMap">
+	        	<result  column="auditPersonName" property="auditPersonName" />
+	        	<result  column="auditPerson" property="auditPerson" />
+	        	<result  column="lastAuditTime" property="lastAuditTime" />
+	        	<result  column="auditCount" property="auditCount" />
+	        	<result  column="waitAuditCount" property="waitAuditCount" />
+	</resultMap>
+	
+	<!-- 查询 简历扩展信息列表 -->
+	<select id="queryZpJlExpandInfoList" resultMap="zpJlExpandInfoMap">
+		SELECT
+						 		jei.jl_expand_id,
+						 		jei.jl_id,
+						 		jei.jl_file_path,
+						 		jei.jl_content,
+						 		jei.technician_audit_person,
+						 		jei.technician_audit_time,
+						 		jei.audit_type_id,
+						 		jei.recommend_flow_status,
+						 		jei.hellp_person_id
+		FROM
+			zp_jl_expand_info  jei
+		<where>
+					<if test="qtype != null and qtype=='like'">
+						<if test="nameT != null and nameT !='' ">
+				        		AND jei.name like '%${nameT}%' 
+			        	</if>
+					</if>
+				        	<if test="jlId != null and jlId !='' ">
+				        		AND jei.jl_id=#{jlId} 
+				        	</if>
+				        	<if test="jlFilePath != null and jlFilePath !='' ">
+				        		AND jei.jl_file_path=#{jlFilePath} 
+				        	</if>
+				        	<if test="jlContent != null and jlContent !='' ">
+				        		AND jei.jl_content=#{jlContent} 
+				        	</if>
+				        	<if test="technicianAuditPerson != null and technicianAuditPerson !='' ">
+				        		AND jei.technician_audit_person=#{technicianAuditPerson} 
+				        	</if>
+				        	<if test="technicianAuditTime != null and technicianAuditTime !='' ">
+				        		AND jei.technician_audit_time=#{technicianAuditTime} 
+				        	</if>
+				        	<if test="auditTypeId != null and auditTypeId !='' ">
+				        		AND jei.audit_type_id=#{auditTypeId} 
+				        	</if>
+				        	
+				        	<if test="hellpPersonId != null and hellpPersonId !='' ">
+				        		AND jei.hellp_person_id=#{auditTypeId} 
+				        	</if>
+					
+					<if test="ids !=null">
+				         AND jei.jl_expand_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+		ORDER BY jei.jl_expand_id desc 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 简历扩展信息列表条数 -->
+	<select id="getZpJlExpandInfoListCount" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			zp_jl_expand_info  jei
+		<where>
+						<if test="qtype != null and qtype=='like'">
+								<if test="nameT != null and nameT !='' ">
+					        		 AND jei.name like  '%${nameT}%' 
+					        	</if>
+						</if>
+							
+							<!-- 非自己，唯一验证 -->
+							<if test="notId != null and notId !=''">
+			        			AND jei.jl_expand_id  !=#{notId} 
+				        	</if>
+							
+				        	<if test="jlId != null and jlId !=''">
+				        		AND jei.jl_id=#{jlId} 
+				        	</if>
+				        	<if test="jlFilePath != null and jlFilePath !=''">
+				        		AND jei.jl_file_path=#{jlFilePath} 
+				        	</if>
+				        	<if test="jlContent != null and jlContent !=''">
+				        		AND jei.jl_content=#{jlContent} 
+				        	</if>
+				        	<if test="technicianAuditPerson != null and technicianAuditPerson !=''">
+				        		AND jei.technician_audit_person=#{technicianAuditPerson} 
+				        	</if>
+				        	<if test="technicianAuditTime != null and technicianAuditTime !=''">
+				        		AND jei.technician_audit_time=#{technicianAuditTime} 
+				        	</if>
+				        	<if test="auditTypeId != null and auditTypeId !=''">
+				        		AND jei.audit_type_id=#{auditTypeId} 
+				        	</if>
+							<if test="hellpPersonId != null and hellpPersonId !='' ">
+				        		AND jei.hellp_person_id=#{auditTypeId} 
+				        	</if>
+				<if test="ids !=null">
+				         AND jei.jl_expand_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+	</select>
+	
+	
+	<!-- 添加 简历扩展信息 -->
+	<insert id="addZpJlExpandInfo" flushCache="true" useGeneratedKeys="true" keyProperty="jlExpandId">
+		INSERT INTO zp_jl_expand_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="jlId != null">
+		        		jl_id,
+		        	</if>
+		        	<if test="jlFilePath != null">
+		        		jl_file_path,
+		        	</if>
+		        	<if test="jlContent != null">
+		        		jl_content,
+		        	</if>
+		        	<if test="technicianAuditPerson != null">
+		        		technician_audit_person,
+		        	</if>
+		        	<if test="technicianAuditTime != null">
+		        		technician_audit_time,
+		        	</if>
+		        	<if test="auditTypeId != null">
+		        		audit_type_id,
+		        	</if>
+		        	<if test="recommendFlowStatus != null">
+		        		recommend_flow_status,
+		        	</if>
+		        	<if test="hellpPersonId != null">
+		        		hellp_person_id,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="jlId != null">
+			        		#{jlId},
+			        	</if>
+			        	<if test="jlFilePath != null">
+			        		#{jlFilePath},
+			        	</if>
+			        	<if test="jlContent != null">
+			        		#{jlContent},
+			        	</if>
+			        	<if test="technicianAuditPerson != null">
+			        		#{technicianAuditPerson},
+			        	</if>
+			        	<if test="technicianAuditTime != null">
+			        		#{technicianAuditTime},
+			        	</if>
+			        	<if test="auditTypeId != null">
+			        		#{auditTypeId},
+			        	</if>
+			        	<if test="recommendFlowStatus != null">
+			        			#{recommendFlowStatus},
+		        		</if>
+		        		<if test="hellpPersonId != null">
+			        			#{hellpPersonId},
+		        		</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 简历扩展信息 -->
+	<update id="updateZpJlExpandInfo" >
+		UPDATE  zp_jl_expand_info
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="jlId != null">
+			        		jl_id=#{jlId},
+			        	</if>
+			        	<if test="jlFilePath != null">
+			        		jl_file_path=#{jlFilePath},
+			        	</if>
+			        	<if test="jlContent != null">
+			        		jl_content=#{jlContent},
+			        	</if>
+			        	<if test="technicianAuditPerson != null">
+			        		technician_audit_person=#{technicianAuditPerson},
+			        	</if>
+			        	<if test="technicianAuditTime != null">
+			        		technician_audit_time=#{technicianAuditTime},
+			        	</if>
+			        	<if test="auditTypeId != null">
+			        		audit_type_id=#{auditTypeId},
+			        	</if>
+			        	<if test="recommendFlowStatus != null">
+			        		recommend_flow_status=#{recommendFlowStatus},
+			        	</if>
+			        	<if test="hellpPersonId != null">
+			        		hellp_person_id=#{hellpPersonId},
+			        	</if>
+		</trim>
+		WHERE jl_expand_id=#{jlExpandId}
+	</update>
+	
+	<!-- 修改 简历扩展信息byMAP -->
+	<update id="updateZpJlExpandInfoByMap" >
+		UPDATE  zp_jl_expand_info
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="jlId != null">
+			        		jl_id=#{jlId},
+			        	</if>
+			        	<if test="jlFilePath != null">
+			        		jl_file_path=#{jlFilePath},
+			        	</if>
+			        	<if test="jlContent != null">
+			        		jl_content=#{jlContent},
+			        	</if>
+			        	<if test="technicianAuditPerson != null">
+			        		technician_audit_person=#{technicianAuditPerson},
+			        	</if>
+			        	<if test="technicianAuditTime != null">
+			        		technician_audit_time=#{technicianAuditTime},
+			        	</if>
+			        	<if test="auditTypeId != null">
+			        		audit_type_id=#{auditTypeId},
+			        	</if>
+			        	<if test="recommendFlowStatus != null">
+			        		recommend_flow_status=#{recommendFlowStatus},
+			        	</if>
+			        	<if test="hellpPersonId != null">
+			        		hellp_person_id=#{hellpPersonId},
+			        	</if>
+		</trim>
+		WHERE  1=1
+		
+		<if test="qtype != null and qtype=='one'">
+					<if test="jlId != null">
+			        	  AND	jl_id=#{jlId}
+		        	</if>
+		        	<if test="technicianAuditPerson != null">
+			        	AND	technician_audit_person=#{technicianAuditPerson}
+		        	</if>
+		</if>
+	</update>
+	
+	
+
+	<!-- 删除  简历扩展信息 -->
+	<delete id="deleteZpJlExpandInfo">
+		DELETE FROM zp_jl_expand_info 
+		<where>
+				        	<if test="jlExpandId != null">
+				        		AND jl_expand_id=#{jlExpandId} 
+				        	</if>
+				        	<if test="jlId != null">
+				        		AND jl_id=#{jlId} 
+				        	</if>
+				        	<if test="jlFilePath != null">
+				        		AND jl_file_path=#{jlFilePath} 
+				        	</if>
+				        	<if test="jlContent != null">
+				        		AND jl_content=#{jlContent} 
+				        	</if>
+				        	<if test="technicianAuditPerson != null">
+				        		AND technician_audit_person=#{technicianAuditPerson} 
+				        	</if>
+				        	<if test="technicianAuditTime != null">
+				        		AND technician_audit_time=#{technicianAuditTime} 
+				        	</if>
+				        	<if test="auditTypeId != null">
+				        		AND audit_type_id=#{auditTypeId} 
+				        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  简历扩展信息 -->
+	<select id="getZpJlExpandInfoById" resultMap="zpJlExpandInfoMap">
+		SELECT
+						 		jei.jl_expand_id,
+						 		jei.jl_id,
+						 		jei.jl_file_path,
+						 		jei.jl_content,
+						 		jei.technician_audit_person,
+						 		jei.technician_audit_time,
+						 		jei.audit_type_id,
+						 		jei.recommend_flow_status,
+						 		jei.hellp_person_id
+						 		
+		FROM
+			zp_jl_expand_info  jei
+		WHERE 
+		jei.jl_expand_id=#{jlExpandId}
+		
+	</select>
+	
+	<!-- 获得  简历扩展信息 统计评审人相关信息 -->
+	<select id="auditPersonStatistics" resultMap="JlAuditPersonListMap">
+		select count(jei.technician_audit_person) as auditCount, 
+		SUM(CASE jei.audit_type_id when 1 then 1 ELSE 0 END ) as waitAuditCount,
+		MAX( jei.technician_audit_time ) as lastAuditTime,
+		max(a.account_id) as auditPerson,
+		MAX(a.username) as auditPersonName
+		from zp_jl_expand_info jei right JOIN account a ON jei.technician_audit_person = a.account_id 
+	 	WHERE 1=1 
+	 	AND a.account_id  IN
+			<foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+			${item} 
+			</foreach>
+	 	GROUP BY jei.technician_audit_person
+		
+	</select>
+	
+	<!-- 获得  简历扩展信息 统计评审人相关信息 -->
+	<select id="queryNotAuditJl" resultType="HashMap">
+		select jei.technician_audit_person as auditPerson,count(1) as jlcount, aei.nick_name as nickname,aei.email as email   
+		from zp_jl_expand_info jei  
+		INNER JOIN account_expand_info aei ON jei.technician_audit_person = aei.account_id
+		where jei.audit_type_id=#{auditTypeId}
+		GROUP BY jei.technician_audit_person 
+	</select>
+
+</mapper>
+

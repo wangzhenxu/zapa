@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SiteLetter">
+
+	<!-- 添加站内信 -->
+	<insert id="addSiteLetter" parameterType="com.loiot.commons.message.site.SiteLetter"
+		flushCache="true" useGeneratedKeys="true" keyProperty="slId">
+		insert into
+		site_letter(user_id,node_id,node_name,scene_id,scene_title,scene_sn,is_read,create_time,action_type,current_value,nt_id,alert_content,sender_id,sender,subject,content)
+		values
+		(#{userId},#{nodeId},#{nodeName},#{sceneId},#{sceneTitle},#{sceneSn},#{isRead},#{createTime},#{actionType},#{currentValue},#{ntId},#{alertContent},#{senderId},#{sender},#{subject},#{content})
+	</insert>
+
+</mapper>

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TaskScheduleJob">
+
+	<resultMap type="TaskScheduleJob" id="taskScheduleJobMap">
+	        	<id  column="job_id" property="jobId"></id>
+	        	<result  column="create_time" property="createTime" />
+	        	<result  column="update_time" property="updateTime" />
+	        	<result  column="job_name" property="jobName" />
+	        	<result  column="job_group" property="jobGroup" />
+	        	<result  column="job_status" property="jobStatus" />
+	        	<result  column="cron_expression" property="cronExpression" />
+	        	<result  column="description" property="description" />
+	        	<result  column="bean_class" property="beanClass" />
+	        	<result  column="is_concurrent" property="isConcurrent" />
+	        	<result  column="spring_id" property="springId" />
+	        	<result  column="method_name" property="methodName" />
+	</resultMap>
+	
+	<!-- 查询 任务列表 -->
+	<select id="queryTaskScheduleJobList" resultMap="taskScheduleJobMap">
+		SELECT
+			<include refid="getParamSQL"></include>
+			<include refid="getListSQL"></include>
+		ORDER BY sj.job_id desc 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 任务列表条数 -->
+	<select id="getTaskScheduleJobListCount" resultType="int">
+		SELECT
+			count(1)
+			<include refid="getListSQL"></include>
+	</select>
+	
+	
+	<!-- 添加 任务 -->
+	<insert id="addTaskScheduleJob" flushCache="true" useGeneratedKeys="true" keyProperty="jobId">
+		INSERT INTO task_schedule_job
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="createTime != null">
+		        		create_time,
+		        	</if>
+		        	<if test="updateTime != null">
+		        		update_time,
+		        	</if>
+		        	<if test="jobName != null">
+		        		job_name,
+		        	</if>
+		        	<if test="jobGroup != null">
+		        		job_group,
+		        	</if>
+		        	<if test="jobStatus != null">
+		        		job_status,
+		        	</if>
+		        	<if test="cronExpression != null">
+		        		cron_expression,
+		        	</if>
+		        	<if test="description != null">
+		        		description,
+		        	</if>
+		        	<if test="beanClass != null">
+		        		bean_class,
+		        	</if>
+		        	<if test="isConcurrent != null">
+		        		is_concurrent,
+		        	</if>
+		        	<if test="springId != null">
+		        		spring_id,
+		        	</if>
+		        	<if test="methodName != null">
+		        		method_name,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="createTime != null">
+			        		#{createTime},
+			        	</if>
+			        	<if test="updateTime != null">
+			        		#{updateTime},
+			        	</if>
+			        	<if test="jobName != null">
+			        		#{jobName},
+			        	</if>
+			        	<if test="jobGroup != null">
+			        		#{jobGroup},
+			        	</if>
+			        	<if test="jobStatus != null">
+			        		#{jobStatus},
+			        	</if>
+			        	<if test="cronExpression != null">
+			        		#{cronExpression},
+			        	</if>
+			        	<if test="description != null">
+			        		#{description},
+			        	</if>
+			        	<if test="beanClass != null">
+			        		#{beanClass},
+			        	</if>
+			        	<if test="isConcurrent != null">
+			        		#{isConcurrent},
+			        	</if>
+			        	<if test="springId != null">
+			        		#{springId},
+			        	</if>
+			        	<if test="methodName != null">
+			        		#{methodName},
+			        	</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 任务 -->
+	<update id="updateTaskScheduleJob" >
+		UPDATE  task_schedule_job
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="createTime != null">
+			        		create_time=#{createTime},
+			        	</if>
+			        	<if test="updateTime != null">
+			        		update_time=#{updateTime},
+			        	</if>
+			        	<if test="jobName != null">
+			        		job_name=#{jobName},
+			        	</if>
+			        	<if test="jobGroup != null">
+			        		job_group=#{jobGroup},
+			        	</if>
+			        	<if test="jobStatus != null">
+			        		job_status=#{jobStatus},
+			        	</if>
+			        	<if test="cronExpression != null">
+			        		cron_expression=#{cronExpression},
+			        	</if>
+			        	<if test="description != null">
+			        		description=#{description},
+			        	</if>
+			        	<if test="beanClass != null">
+			        		bean_class=#{beanClass},
+			        	</if>
+			        	<if test="isConcurrent != null">
+			        		is_concurrent=#{isConcurrent},
+			        	</if>
+			        	<if test="springId != null">
+			        		spring_id=#{springId},
+			        	</if>
+			        	<if test="methodName != null">
+			        		method_name=#{methodName},
+			        	</if>
+		</trim>
+		WHERE job_id=#{jobId}
+	</update>
+	
+	
+	<!-- 修改 任务byMAP -->
+	<update id="updateTaskScheduleJobbyMAP" >
+		UPDATE  task_schedule_job
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="createTime != null">
+			        		create_time=#{createTime},
+			        	</if>
+			        	<if test="updateTime != null">
+			        		update_time=#{updateTime},
+			        	</if>
+			        	<if test="jobName != null">
+			        		job_name=#{jobName},
+			        	</if>
+			        	<if test="jobGroup != null">
+			        		job_group=#{jobGroup},
+			        	</if>
+			        	<if test="jobStatus != null">
+			        		job_status=#{jobStatus},
+			        	</if>
+			        	<if test="cronExpression != null">
+			        		cron_expression=#{cronExpression},
+			        	</if>
+			        	<if test="description != null">
+			        		description=#{description},
+			        	</if>
+			        	<if test="beanClass != null">
+			        		bean_class=#{beanClass},
+			        	</if>
+			        	<if test="isConcurrent != null">
+			        		is_concurrent=#{isConcurrent},
+			        	</if>
+			        	<if test="springId != null">
+			        		spring_id=#{springId},
+			        	</if>
+			        	<if test="methodName != null">
+			        		method_name=#{methodName},
+			        	</if>
+		</trim>
+		WHERE 1=1
+		<if test="qtype != null and qtype=='one'">
+		</if>
+	</update>
+
+	<!-- 删除  任务 -->
+	<delete id="deleteTaskScheduleJob">
+		DELETE FROM task_schedule_job 
+		<where>
+				        	<if test="jobId != null">
+				        		AND job_id=#{jobId} 
+				        	</if>
+				        	<if test="createTime != null">
+				        		AND create_time=#{createTime} 
+				        	</if>
+				        	<if test="updateTime != null">
+				        		AND update_time=#{updateTime} 
+				        	</if>
+				        	<if test="jobName != null">
+				        		AND job_name=#{jobName} 
+				        	</if>
+				        	<if test="jobGroup != null">
+				        		AND job_group=#{jobGroup} 
+				        	</if>
+				        	<if test="jobStatus != null">
+				        		AND job_status=#{jobStatus} 
+				        	</if>
+				        	<if test="cronExpression != null">
+				        		AND cron_expression=#{cronExpression} 
+				        	</if>
+				        	<if test="description != null">
+				        		AND description=#{description} 
+				        	</if>
+				        	<if test="beanClass != null">
+				        		AND bean_class=#{beanClass} 
+				        	</if>
+				        	<if test="isConcurrent != null">
+				        		AND is_concurrent=#{isConcurrent} 
+				        	</if>
+				        	<if test="springId != null">
+				        		AND spring_id=#{springId} 
+				        	</if>
+				        	<if test="methodName != null">
+				        		AND method_name=#{methodName} 
+				        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  任务 -->
+	<select id="getTaskScheduleJobById" resultMap="taskScheduleJobMap">
+		SELECT
+			<include refid="getParamSQL"></include>
+			<include refid="getListSQL"></include>
+		
+	</select>
+	
+	<!-- getListSQL -->
+	<sql id="getListSQL">
+			FROM
+			task_schedule_job  sj
+		<where>
+					<if test="qtype != null and qtype=='like'">
+						<if test="nameT != null and nameT !='' ">
+				        		AND sj.name like '%${nameT}%' 
+			        	</if>
+					</if>
+				        	<if test="jobId != null and jobId !='' ">
+				        		AND sj.job_id=#{jobId} 
+				        	</if>
+				        	<if test="createTime != null and createTime !='' ">
+				        		AND sj.create_time=#{createTime} 
+				        	</if>
+				        	<if test="updateTime != null and updateTime !='' ">
+				        		AND sj.update_time=#{updateTime} 
+				        	</if>
+				        	<if test="jobName != null and jobName !='' ">
+				        		AND sj.job_name=#{jobName} 
+				        	</if>
+				        	<if test="jobGroup != null and jobGroup !='' ">
+				        		AND sj.job_group=#{jobGroup} 
+				        	</if>
+				        	<if test="jobStatus != null and jobStatus !='' ">
+				        		AND sj.job_status=#{jobStatus} 
+				        	</if>
+				        	<if test="cronExpression != null and cronExpression !='' ">
+				        		AND sj.cron_expression=#{cronExpression} 
+				        	</if>
+				        	<if test="description != null and description !='' ">
+				        		AND sj.description=#{description} 
+				        	</if>
+				        	<if test="beanClass != null and beanClass !='' ">
+				        		AND sj.bean_class=#{beanClass} 
+				        	</if>
+				        	<if test="isConcurrent != null and isConcurrent !='' ">
+				        		AND sj.is_concurrent=#{isConcurrent} 
+				        	</if>
+				        	<if test="springId != null and springId !='' ">
+				        		AND sj.spring_id=#{springId} 
+				        	</if>
+				        	<if test="methodName != null and methodName !='' ">
+				        		AND sj.method_name=#{methodName} 
+				        	</if>
+					
+					<if test="ids !=null">
+				         AND sj.job_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+	</sql>
+	
+	<!-- sql 参数 -->
+	<sql id="getParamSQL">
+						 		sj.job_id,
+						 		sj.create_time,
+						 		sj.update_time,
+						 		sj.job_name,
+						 		sj.job_group,
+						 		sj.job_status,
+						 		sj.cron_expression,
+						 		sj.description,
+						 		sj.bean_class,
+						 		sj.is_concurrent,
+						 		sj.spring_id,
+						 		sj.method_name
+	</sql>
+
+</mapper>
+

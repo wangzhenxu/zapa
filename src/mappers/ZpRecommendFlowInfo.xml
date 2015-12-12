@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ZpRecommendFlowInfo">
+
+	<resultMap type="ZpRecommendFlowInfo" id="zpRecommendFlowInfoMap">
+	        	<id  column="audit_id" property="auditId"></id>
+	        	<result  column="company_job_id" property="companyJobId" />
+	        	<result  column="jl_id" property="jlId" />
+	        	<result  column="match_id" property="matchId" />
+	        	<result  column="enterprise_name" property="enterpriseName" />
+	        	<result  column="technician_audit_person" property="technicianAuditPerson" />
+	        	<result  column="technician_audit_content" property="technicianAuditContent" />
+	        	<result  column="technician_audit_time" property="technicianAuditTime" />
+	        	<result  column="technician_audit_status" property="technicianAuditStatus" />
+	        	<result  column="enterprise_docking_person" property="enterpriseDockingPerson" />
+	        	<result  column="enterprise_docking_status" property="enterpriseDockingStatus" />
+	        	<result  column="enterprise_docking_time" property="enterpriseDockingTime" />
+	        	<result  column="enterprise_reply_status" property="enterpriseReplyStatus" />
+	        	<result  column="enterprise_reply_content" property="enterpriseReplyContent" />
+	        	<result  column="enterprise_reply_time" property="enterpriseReplyTime" />
+	        	<result  column="hr_notice_person" property="hrNoticePerson" />
+	        	<result  column="hr_notice_status" property="hrNoticeStatus" />
+	        	<result  column="hr_notice_time" property="hrNoticeTime" />
+	        	<result  column="hr_notice_feedback_content" property="hrNoticeFeedbackContent" />
+	        	<result  column="enterprise_invitation_time" property="enterpriseInvitationTime" />
+	        	<result  column="hr_before_notify_hunter_status" property="hrBeforeNotifyHunterStatus" />
+	        	<result  column="hr_before_notify_hunter_time" property="hrBeforeNotifyHunterTime" />
+	        	<result  column="hr_before_notify_hunter_person" property="hrBeforeNotifyHunterPerson" />
+	        	<result  column="hunter_goto_interview_status" property="hunterGotoInterviewStatus" />
+	        	<result  column="hunter_replay_content" property="hunterReplayContent" />
+	        	<result  column="last_update_time" property="lastUpdateTime" />
+	        	<result  column="last_update_person" property="lastUpdatePerson" />
+	        	<result  column="in_time" property="inTime" />
+	        	<result  column="flow_status" property="flowStatus" />
+	        	<result  column="in_person" property="inPerson" />
+	        	<result  column="enterprise_interface_person" property="enterpriseInterfacePerson" />
+	        	<result  column="headhunter_interface_person" property="headhunterInterfacePerson" />
+	        	
+	        	<result  column="hunter_goto_interview_operator_time" property="hunterGotoInterviewOperatorTime" />
+	        	<result  column="hunter_interview_status" property="hunterInterviewStatus" />
+	        	<result  column="hunter_interview_operator_time" property="hunterInterviewOperatorTime" />
+	        	<result  column="hunter_inerview_replay_content" property="hunterInerviewReplayContent" />
+	        	
+				<result  column="inPersonName" property="inPersonName" />
+				<result  column="companyName" property="companyName" />
+				<result  column="companyJobName" property="companyJobName" />
+				<result  column="jlName" property="jlName" />
+				<result  column="jlFilePath" property="jlFilePath" />
+				<result  column="technicianAuditPersonName" property="technicianAuditPersonName" />
+				<result  column="enterpriseInterfacePersonName" property="enterpriseInterfacePersonName" />
+				<result  column="headhunterInterfacePersonName" property="headhunterInterfacePersonName" />
+				
+				
+				
+	</resultMap>
+	
+	<!-- 查询 推荐流程列表 -->
+	<select id="queryZpRecommendFlowInfoList" resultMap="zpRecommendFlowInfoMap">
+		SELECT
+			<include refid="getParamSQL"></include>
+			<include refid="getListSQL"></include>
+		ORDER BY rfi.audit_id desc 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 推荐流程列表条数 -->
+	<select id="getZpRecommendFlowInfoListCount" resultType="int">
+		SELECT
+			count(1)
+			<include refid="getListSQL"></include>
+	</select>
+	
+	
+	<!-- 添加 推荐流程 -->
+	<insert id="addZpRecommendFlowInfo" flushCache="true" useGeneratedKeys="true" keyProperty="auditId">
+		INSERT INTO zp_recommend_flow_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="companyJobId != null">
+		        		company_job_id,
+		        	</if>
+		        	<if test="jlId != null">
+		        		jl_id,
+		        	</if>
+		        	<if test="matchId != null">
+		        		match_id,
+		        	</if>
+		        	<if test="enterpriseName != null">
+		        		enterprise_name,
+		        	</if>
+		        	<if test="technicianAuditPerson != null">
+		        		technician_audit_person,
+		        	</if>
+		        	<if test="technicianAuditContent != null">
+		        		technician_audit_content,
+		        	</if>
+		        	<if test="technicianAuditTime != null">
+		        		technician_audit_time,
+		        	</if>
+		        	<if test="technicianAuditStatus != null">
+		        		technician_audit_status,
+		        	</if>
+		        	<if test="enterpriseDockingPerson != null">
+		        		enterprise_docking_person,
+		        	</if>
+		        	<if test="enterpriseDockingStatus != null">
+		        		enterprise_docking_status,
+		        	</if>
+		        	<if test="enterpriseDockingTime != null">
+		        		enterprise_docking_time,
+		        	</if>
+		        	<if test="enterpriseReplyStatus != null">
+		        		enterprise_reply_status,
+		        	</if>
+		        	<if test="enterpriseReplyContent != null">
+		        		enterprise_reply_content,
+		        	</if>
+		        	<if test="enterpriseReplyTime != null">
+		        		enterprise_reply_time,
+		        	</if>
+		        	<if test="hrNoticePerson != null">
+		        		hr_notice_person,
+		        	</if>
+		        	<if test="hrNoticeStatus != null">
+		        		hr_notice_status,
+		        	</if>
+		        	<if test="hrNoticeTime != null">
+		        		hr_notice_time,
+		        	</if>
+		        	<if test="hrNoticeFeedbackContent != null">
+		        		hr_notice_feedback_content,
+		        	</if>
+		        	<if test="enterpriseInvitationTime != null">
+		        		enterprise_invitation_time,
+		        	</if>
+		        	<if test="hrBeforeNotifyHunterStatus != null">
+		        		hr_before_notify_hunter_status,
+		        	</if>
+		        	<if test="hrBeforeNotifyHunterTime != null">
+		        		hr_before_notify_hunter_time,
+		        	</if>
+		        	<if test="hrBeforeNotifyHunterPerson != null">
+		        		hr_before_notify_hunter_person,
+		        	</if>
+		        	<if test="hunterGotoInterviewStatus != null">
+		        		hunter_goto_interview_status,
+		        	</if>
+		        	<if test="hunterReplayContent != null">
+		        		hunter_replay_content,
+		        	</if>
+		        	<if test="lastUpdateTime != null">
+		        		last_update_time,
+		        	</if>
+		        	<if test="lastUpdatePerson != null">
+		        		last_update_person,
+		        	</if>
+		        	<if test="inTime != null">
+		        		in_time,
+		        	</if>
+		        	<if test="flowStatus != null">
+		        		flow_status,
+		        	</if>
+		        	<if test="inPerson != null">
+		        		in_person,
+		        	</if>
+		        	<if test="enterpriseInterfacePerson != null">
+		        		enterprise_interface_person,
+		        	</if>
+		        	<if test="headhunterInterfacePerson != null">
+		        		headhunter_interface_person,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="companyJobId != null">
+			        		#{companyJobId},
+			        	</if>
+			        	<if test="jlId != null">
+			        		#{jlId},
+			        	</if>
+			        	<if test="matchId != null">
+			        		#{matchId},
+			        	</if>
+			        	<if test="enterpriseName != null">
+			        		#{enterpriseName},
+			        	</if>
+			        	<if test="technicianAuditPerson != null">
+			        		#{technicianAuditPerson},
+			        	</if>
+			        	<if test="technicianAuditContent != null">
+			        		#{technicianAuditContent},
+			        	</if>
+			        	<if test="technicianAuditTime != null">
+			        		#{technicianAuditTime},
+			        	</if>
+			        	<if test="technicianAuditStatus != null">
+			        		#{technicianAuditStatus},
+			        	</if>
+			        	<if test="enterpriseDockingPerson != null">
+			        		#{enterpriseDockingPerson},
+			        	</if>
+			        	<if test="enterpriseDockingStatus != null">
+			        		#{enterpriseDockingStatus},
+			        	</if>
+			        	<if test="enterpriseDockingTime != null">
+			        		#{enterpriseDockingTime},
+			        	</if>
+			        	<if test="enterpriseReplyStatus != null">
+			        		#{enterpriseReplyStatus},
+			        	</if>
+			        	<if test="enterpriseReplyContent != null">
+			        		#{enterpriseReplyContent},
+			        	</if>
+			        	<if test="enterpriseReplyTime != null">
+			        		#{enterpriseReplyTime},
+			        	</if>
+			        	<if test="hrNoticePerson != null">
+			        		#{hrNoticePerson},
+			        	</if>
+			        	<if test="hrNoticeStatus != null">
+			        		#{hrNoticeStatus},
+			        	</if>
+			        	<if test="hrNoticeTime != null">
+			        		#{hrNoticeTime},
+			        	</if>
+			        	<if test="hrNoticeFeedbackContent != null">
+			        		#{hrNoticeFeedbackContent},
+			        	</if>
+			        	<if test="enterpriseInvitationTime != null">
+			        		#{enterpriseInvitationTime},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterStatus != null">
+			        		#{hrBeforeNotifyHunterStatus},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterTime != null">
+			        		#{hrBeforeNotifyHunterTime},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterPerson != null">
+			        		#{hrBeforeNotifyHunterPerson},
+			        	</if>
+			        	<if test="hunterGotoInterviewStatus != null">
+			        		#{hunterGotoInterviewStatus},
+			        	</if>
+			        	<if test="hunterReplayContent != null">
+			        		#{hunterReplayContent},
+			        	</if>
+			        	<if test="lastUpdateTime != null">
+			        		#{lastUpdateTime},
+			        	</if>
+			        	<if test="lastUpdatePerson != null">
+			        		#{lastUpdatePerson},
+			        	</if>
+			        	<if test="inTime != null">
+			        		#{inTime},
+			        	</if>
+			        	<if test="flowStatus != null">
+			        		#{flowStatus},
+			        	</if>
+			        	<if test="inPerson != null">
+			        		#{inPerson},
+			        	</if>
+			        	<if test="enterpriseInterfacePerson != null">
+		        			#{enterpriseInterfacePerson},
+		        		</if>
+		        		<if test="headhunterInterfacePerson != null">
+		        			#{headhunterInterfacePerson},
+		        		</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 推荐流程 -->
+	<update id="updateZpRecommendFlowInfo" >
+		UPDATE  zp_recommend_flow_info
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="companyJobId != null">
+			        		company_job_id=#{companyJobId},
+			        	</if>
+			        	<if test="jlId != null">
+			        		jl_id=#{jlId},
+			        	</if>
+			        	<if test="matchId != null">
+			        		match_id=#{matchId},
+			        	</if>
+			        	<if test="enterpriseName != null">
+			        		enterprise_name=#{enterpriseName},
+			        	</if>
+			        	<if test="technicianAuditPerson != null">
+			        		technician_audit_person=#{technicianAuditPerson},
+			        	</if>
+			        	<if test="technicianAuditContent != null">
+			        		technician_audit_content=#{technicianAuditContent},
+			        	</if>
+			        	<if test="technicianAuditTime != null">
+			        		technician_audit_time=#{technicianAuditTime},
+			        	</if>
+			        	<if test="technicianAuditStatus != null">
+			        		technician_audit_status=#{technicianAuditStatus},
+			        	</if>
+			        	<if test="enterpriseDockingPerson != null">
+			        		enterprise_docking_person=#{enterpriseDockingPerson},
+			        	</if>
+			        	<if test="enterpriseDockingStatus != null">
+			        		enterprise_docking_status=#{enterpriseDockingStatus},
+			        	</if>
+			        	<if test="enterpriseDockingTime != null">
+			        		enterprise_docking_time=#{enterpriseDockingTime},
+			        	</if>
+			        	<if test="enterpriseReplyStatus != null">
+			        		enterprise_reply_status=#{enterpriseReplyStatus},
+			        	</if>
+			        	<if test="enterpriseReplyContent != null">
+			        		enterprise_reply_content=#{enterpriseReplyContent},
+			        	</if>
+			        	<if test="enterpriseReplyTime != null">
+			        		enterprise_reply_time=#{enterpriseReplyTime},
+			        	</if>
+			        	<if test="hrNoticePerson != null">
+			        		hr_notice_person=#{hrNoticePerson},
+			        	</if>
+			        	<if test="hrNoticeStatus != null">
+			        		hr_notice_status=#{hrNoticeStatus},
+			        	</if>
+			        	<if test="hrNoticeTime != null">
+			        		hr_notice_time=#{hrNoticeTime},
+			        	</if>
+			        	<if test="hrNoticeFeedbackContent != null">
+			        		hr_notice_feedback_content=#{hrNoticeFeedbackContent},
+			        	</if>
+			        	<if test="enterpriseInvitationTime != null">
+			        		enterprise_invitation_time=#{enterpriseInvitationTime},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterStatus != null">
+			        		hr_before_notify_hunter_status=#{hrBeforeNotifyHunterStatus},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterTime != null">
+			        		hr_before_notify_hunter_time=#{hrBeforeNotifyHunterTime},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterPerson != null">
+			        		hr_before_notify_hunter_person=#{hrBeforeNotifyHunterPerson},
+			        	</if>
+			        	<if test="hunterGotoInterviewStatus != null">
+			        		hunter_goto_interview_status=#{hunterGotoInterviewStatus},
+			        	</if>
+			        	<if test="hunterReplayContent != null">
+			        		hunter_replay_content=#{hunterReplayContent},
+			        	</if>
+			        	<if test="lastUpdateTime != null">
+			        		last_update_time=#{lastUpdateTime},
+			        	</if>
+			        	<if test="lastUpdatePerson != null">
+			        		last_update_person=#{lastUpdatePerson},
+			        	</if>
+			        	<if test="inTime != null">
+			        		in_time=#{inTime},
+			        	</if>
+			        	<if test="flowStatus != null">
+			        		flow_status=#{flowStatus},
+			        	</if>
+			        	<if test="inPerson != null">
+			        		in_person=#{inPerson},
+			        	</if>
+			        	<if test="enterpriseInterfacePerson != null">
+			        		enterprise_interface_person=#{enterpriseInterfacePerson},
+			        	</if>
+			        	<if test="headhunterInterfacePerson != null">
+			        		headhunter_interface_person=#{headhunterInterfacePerson},
+			        	</if>
+			        	<if test="hunterGotoInterviewOperatorTime != null">
+			        		hunter_goto_interview_operator_time=#{hunterGotoInterviewOperatorTime},
+			        	</if>
+			        	<if test="hunterInterviewStatus != null">
+			        		hunter_interview_status=#{hunterInterviewStatus},
+			        	</if>
+			        	<if test="hunterInterviewOperatorTime != null">
+			        		hunter_interview_operator_time=#{hunterInterviewOperatorTime},
+			        	</if>
+			        	<if test="hunterInerviewReplayContent != null">
+			        		hunter_inerview_replay_content=#{hunterInerviewReplayContent},
+			        	</if>
+			        	
+		</trim>
+		WHERE audit_id=#{auditId}
+	</update>
+	
+	
+	<!-- 修改 推荐流程byMAP -->
+	<update id="updateZpRecommendFlowInfobyMAP" >
+		UPDATE  zp_recommend_flow_info
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="companyJobId != null">
+			        		company_job_id=#{companyJobId},
+			        	</if>
+			        	<if test="jlId != null">
+			        		jl_id=#{jlId},
+			        	</if>
+			        	<if test="matchId != null">
+			        		match_id=#{matchId},
+			        	</if>
+			        	<if test="enterpriseName != null">
+			        		enterprise_name=#{enterpriseName},
+			        	</if>
+			        	<if test="technicianAuditPerson != null">
+			        		technician_audit_person=#{technicianAuditPerson},
+			        	</if>
+			        	<if test="technicianAuditContent != null">
+			        		technician_audit_content=#{technicianAuditContent},
+			        	</if>
+			        	<if test="technicianAuditTime != null">
+			        		technician_audit_time=#{technicianAuditTime},
+			        	</if>
+			        	<if test="technicianAuditStatus != null">
+			        		technician_audit_status=#{technicianAuditStatus},
+			        	</if>
+			        	<if test="enterpriseDockingPerson != null">
+			        		enterprise_docking_person=#{enterpriseDockingPerson},
+			        	</if>
+			        	<if test="enterpriseDockingStatus != null">
+			        		enterprise_docking_status=#{enterpriseDockingStatus},
+			        	</if>
+			        	<if test="enterpriseDockingTime != null">
+			        		enterprise_docking_time=#{enterpriseDockingTime},
+			        	</if>
+			        	<if test="enterpriseReplyStatus != null">
+			        		enterprise_reply_status=#{enterpriseReplyStatus},
+			        	</if>
+			        	<if test="enterpriseReplyContent != null">
+			        		enterprise_reply_content=#{enterpriseReplyContent},
+			        	</if>
+			        	<if test="enterpriseReplyTime != null">
+			        		enterprise_reply_time=#{enterpriseReplyTime},
+			        	</if>
+			        	<if test="hrNoticePerson != null">
+			        		hr_notice_person=#{hrNoticePerson},
+			        	</if>
+			        	<if test="hrNoticeStatus != null">
+			        		hr_notice_status=#{hrNoticeStatus},
+			        	</if>
+			        	<if test="hrNoticeTime != null">
+			        		hr_notice_time=#{hrNoticeTime},
+			        	</if>
+			        	<if test="hrNoticeFeedbackContent != null">
+			        		hr_notice_feedback_content=#{hrNoticeFeedbackContent},
+			        	</if>
+			        	<if test="enterpriseInvitationTime != null">
+			        		enterprise_invitation_time=#{enterpriseInvitationTime},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterStatus != null">
+			        		hr_before_notify_hunter_status=#{hrBeforeNotifyHunterStatus},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterTime != null">
+			        		hr_before_notify_hunter_time=#{hrBeforeNotifyHunterTime},
+			        	</if>
+			        	<if test="hrBeforeNotifyHunterPerson != null">
+			        		hr_before_notify_hunter_person=#{hrBeforeNotifyHunterPerson},
+			        	</if>
+			        	<if test="hunterGotoInterviewStatus != null">
+			        		hunter_goto_interview_status=#{hunterGotoInterviewStatus},
+			        	</if>
+			        	<if test="hunterReplayContent != null">
+			        		hunter_replay_content=#{hunterReplayContent},
+			        	</if>
+			        	<if test="lastUpdateTime != null">
+			        		last_update_time=#{lastUpdateTime},
+			        	</if>
+			        	<if test="lastUpdatePerson != null">
+			        		last_update_person=#{lastUpdatePerson},
+			        	</if>
+			        	<if test="inTime != null">
+			        		in_time=#{inTime},
+			        	</if>
+			        	<if test="flowStatus != null">
+			        		flow_status=#{flowStatus},
+			        	</if>
+			        	<if test="inPerson != null">
+			        		in_person=#{inPerson},
+			        	</if>
+		</trim>
+		WHERE 1=1
+		<if test="qtype != null and qtype=='one'">
+		</if>
+	</update>
+
+	<!-- 删除  推荐流程 -->
+	<delete id="deleteZpRecommendFlowInfo">
+		DELETE FROM zp_recommend_flow_info 
+		<where>
+				        	<if test="auditId != null">
+				        		AND audit_id=#{auditId} 
+				        	</if>
+				        	<if test="companyJobId != null">
+				        		AND company_job_id=#{companyJobId} 
+				        	</if>
+				        	<if test="jlId != null">
+				        		AND jl_id=#{jlId} 
+				        	</if>
+				        	<if test="matchId != null">
+				        		AND match_id=#{matchId} 
+				        	</if>
+				        	<if test="enterpriseName != null">
+				        		AND enterprise_name=#{enterpriseName} 
+				        	</if>
+				        	<if test="technicianAuditPerson != null">
+				        		AND technician_audit_person=#{technicianAuditPerson} 
+				        	</if>
+				        	<if test="technicianAuditContent != null">
+				        		AND technician_audit_content=#{technicianAuditContent} 
+				        	</if>
+				        	<if test="technicianAuditTime != null">
+				        		AND technician_audit_time=#{technicianAuditTime} 
+				        	</if>
+				        	<if test="technicianAuditStatus != null">
+				        		AND technician_audit_status=#{technicianAuditStatus} 
+				        	</if>
+				        	<if test="enterpriseDockingPerson != null">
+				        		AND enterprise_docking_person=#{enterpriseDockingPerson} 
+				        	</if>
+				        	<if test="enterpriseDockingStatus != null">
+				        		AND enterprise_docking_status=#{enterpriseDockingStatus} 
+				        	</if>
+				        	<if test="enterpriseDockingTime != null">
+				        		AND enterprise_docking_time=#{enterpriseDockingTime} 
+				        	</if>
+				        	<if test="enterpriseReplyStatus != null">
+				        		AND enterprise_reply_status=#{enterpriseReplyStatus} 
+				        	</if>
+				        	<if test="enterpriseReplyContent != null">
+				        		AND enterprise_reply_content=#{enterpriseReplyContent} 
+				        	</if>
+				        	<if test="enterpriseReplyTime != null">
+				        		AND enterprise_reply_time=#{enterpriseReplyTime} 
+				        	</if>
+				        	<if test="hrNoticePerson != null">
+				        		AND hr_notice_person=#{hrNoticePerson} 
+				        	</if>
+				        	<if test="hrNoticeStatus != null">
+				        		AND hr_notice_status=#{hrNoticeStatus} 
+				        	</if>
+				        	<if test="hrNoticeTime != null">
+				        		AND hr_notice_time=#{hrNoticeTime} 
+				        	</if>
+				        	<if test="hrNoticeFeedbackContent != null">
+				        		AND hr_notice_feedback_content=#{hrNoticeFeedbackContent} 
+				        	</if>
+				        	<if test="enterpriseInvitationTime != null">
+				        		AND enterprise_invitation_time=#{enterpriseInvitationTime} 
+				        	</if>
+				        	<if test="hrBeforeNotifyHunterStatus != null">
+				        		AND hr_before_notify_hunter_status=#{hrBeforeNotifyHunterStatus} 
+				        	</if>
+				        	<if test="hrBeforeNotifyHunterTime != null">
+				        		AND hr_before_notify_hunter_time=#{hrBeforeNotifyHunterTime} 
+				        	</if>
+				        	<if test="hrBeforeNotifyHunterPerson != null">
+				        		AND hr_before_notify_hunter_person=#{hrBeforeNotifyHunterPerson} 
+				        	</if>
+				        	<if test="hunterGotoInterviewStatus != null">
+				        		AND hunter_goto_interview_status=#{hunterGotoInterviewStatus} 
+				        	</if>
+				        	<if test="hunterReplayContent != null">
+				        		AND hunter_replay_content=#{hunterReplayContent} 
+				        	</if>
+				        	<if test="lastUpdateTime != null">
+				        		AND last_update_time=#{lastUpdateTime} 
+				        	</if>
+				        	<if test="lastUpdatePerson != null">
+				        		AND last_update_person=#{lastUpdatePerson} 
+				        	</if>
+				        	<if test="inTime != null">
+				        		AND in_time=#{inTime} 
+				        	</if>
+				        	<if test="flowStatus != null">
+				        		AND flow_status=#{flowStatus} 
+				        	</if>
+				        	<if test="inPerson != null">
+				        		AND in_person=#{inPerson} 
+				        	</if>
+				        	<if test="hunterInterviewStatus != null">
+			        		hunter_interview_status=#{hunterInterviewStatus},
+			        	</if>
+			        	<if test="hunterInterviewOperatorTime != null">
+			        		hunter_interview_operator_time=#{hunterInterviewOperatorTime},
+			        	</if>
+			        	<if test="hunterInerviewReplayContent != null">
+			        		hunter_inerview_replay_content=#{hunterInerviewReplayContent},
+			        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  推荐流程 -->
+	<select id="getZpRecommendFlowInfoById" resultMap="zpRecommendFlowInfoMap">
+		SELECT
+			<include refid="getParamSQL"></include>
+			<include refid="getListSQL"></include>
+		
+	</select>
+	
+	<!-- getListSQL -->
+	<sql id="getListSQL">
+			FROM
+			zp_recommend_flow_info  rfi
+			LEFT JOIN account a ON a.account_id =rfi.in_person
+			LEFT JOIN zp_company_job_info cji on cji.job_id = rfi.company_job_id
+      		left JOIN zp_company_info ci on ci.company_id = cji.company_id 
+			LEFT JOIN zp_jl_info ji  on ji.jl_id = rfi.jl_id
+      		LEFT JOIN zp_jl_expand_info jei on  ji.jl_id = jei.jl_id
+      		LEFT JOIN account a2 ON a2.account_id =rfi.technician_audit_person
+      		LEFT JOIN account a3 ON a3.account_id =rfi.enterprise_interface_person
+      		LEFT JOIN account a4 ON a4.account_id =rfi.headhunter_interface_person
+      		
+			
+		<where>
+					<if test="qtype != null and qtype=='like'">
+						<if test="nameT != null and nameT !='' ">
+				        		AND rfi.name like '%${nameT}%' 
+			        	</if>
+					</if>
+					  <if test="startTimeT != null and startTimeT !='' ">
+				      	<![CDATA[ AND (ji.in_time>#{startTimeT} AND ji.in_time<#{endTimeT}  ) ]]>	
+				 	 </if>
+				        	<if test="auditId != null and auditId !='' ">
+				        		AND rfi.audit_id=#{auditId} 
+				        	</if>
+				        	<if test="companyJobId != null and companyJobId !='' ">
+				        		AND rfi.company_job_id=#{companyJobId} 
+				        	</if>
+				        	<if test="jlId != null and jlId !='' ">
+				        		AND rfi.jl_id=#{jlId} 
+				        	</if>
+				        	<if test="matchId != null and matchId !='' ">
+				        		AND rfi.match_id=#{matchId} 
+				        	</if>
+				        	<if test="enterpriseName != null and enterpriseName !='' ">
+				        		AND rfi.enterprise_name=#{enterpriseName} 
+				        	</if>
+				        	<if test="technicianAuditPersontechnicianAuditPerson != null and technicianAuditPerson !='' ">
+				        		AND rfi.technician_audit_person=#{technicianAuditPerson} 
+				        	</if>
+				        	<if test="technicianAuditContent != null and technicianAuditContent !='' ">
+				        		AND rfi.technician_audit_content=#{technicianAuditContent} 
+				        	</if>
+				        	<if test="technicianAuditTime != null and technicianAuditTime !='' ">
+				        		AND rfi.technician_audit_time=#{technicianAuditTime} 
+				        	</if>
+				        	<if test="technicianAuditStatus != null and technicianAuditStatus !='' ">
+				        		AND rfi.technician_audit_status=#{technicianAuditStatus} 
+				        	</if>
+				        	<if test="enterpriseDockingPerson != null and enterpriseDockingPerson !='' ">
+				        		AND rfi.enterprise_docking_person=#{enterpriseDockingPerson} 
+				        	</if>
+				        	<if test="enterpriseDockingStatus != null and enterpriseDockingStatus !='' ">
+				        		AND rfi.enterprise_docking_status=#{enterpriseDockingStatus} 
+				        	</if>
+				        	<if test="enterpriseDockingTime != null and enterpriseDockingTime !='' ">
+				        		AND rfi.enterprise_docking_time=#{enterpriseDockingTime} 
+				        	</if>
+				        	<if test="enterpriseReplyStatus != null and enterpriseReplyStatus !='' ">
+				        		AND rfi.enterprise_reply_status=#{enterpriseReplyStatus} 
+				        	</if>
+				        	<if test="enterpriseReplyContent != null and enterpriseReplyContent !='' ">
+				        		AND rfi.enterprise_reply_content=#{enterpriseReplyContent} 
+				        	</if>
+				        	<if test="enterpriseReplyTime != null and enterpriseReplyTime !='' ">
+				        		AND rfi.enterprise_reply_time=#{enterpriseReplyTime} 
+				        	</if>
+				        	<if test="hrNoticePerson != null and hrNoticePerson !='' ">
+				        		AND rfi.hr_notice_person=#{hrNoticePerson} 
+				        	</if>
+				        	<if test="hrNoticeStatus != null and hrNoticeStatus !='' ">
+				        		AND rfi.hr_notice_status=#{hrNoticeStatus} 
+				        	</if>
+				        	<if test="hrNoticeTime != null and hrNoticeTime !='' ">
+				        		AND rfi.hr_notice_time=#{hrNoticeTime} 
+				        	</if>
+				        	<if test="hrNoticeFeedbackContent != null and hrNoticeFeedbackContent !='' ">
+				        		AND rfi.hr_notice_feedback_content=#{hrNoticeFeedbackContent} 
+				        	</if>
+				        	<if test="enterpriseInvitationTime != null and enterpriseInvitationTime !='' ">
+				        		AND rfi.enterprise_invitation_time=#{enterpriseInvitationTime} 
+				        	</if>
+				        	<if test="hrBeforeNotifyHunterStatus != null and hrBeforeNotifyHunterStatus !='' ">
+				        		AND rfi.hr_before_notify_hunter_status=#{hrBeforeNotifyHunterStatus} 
+				        	</if>
+				        	<if test="hrBeforeNotifyHunterTime != null and hrBeforeNotifyHunterTime !='' ">
+				        		AND rfi.hr_before_notify_hunter_time=#{hrBeforeNotifyHunterTime} 
+				        	</if>
+				        	<if test="hrBeforeNotifyHunterPerson != null and hrBeforeNotifyHunterPerson !='' ">
+				        		AND rfi.hr_before_notify_hunter_person=#{hrBeforeNotifyHunterPerson} 
+				        	</if>
+				        	<if test="hunterGotoInterviewStatus != null and hunterGotoInterviewStatus !='' ">
+				        		AND rfi.hunter_goto_interview_status=#{hunterGotoInterviewStatus} 
+				        	</if>
+				        	<if test="hunterReplayContent != null and hunterReplayContent !='' ">
+				        		AND rfi.hunter_replay_content=#{hunterReplayContent} 
+				        	</if>
+				        	<if test="lastUpdateTime != null and lastUpdateTime !='' ">
+				        		AND rfi.last_update_time=#{lastUpdateTime} 
+				        	</if>
+				        	<if test="lastUpdatePerson != null and lastUpdatePerson !='' ">
+				        		AND rfi.last_update_person=#{lastUpdatePerson} 
+				        	</if>
+				        	<if test="inTime != null and inTime !='' ">
+				        		AND rfi.in_time=#{inTime} 
+				        	</if>
+				        	<if test="flowStatus != null and flowStatus !='' ">
+				        		AND rfi.flow_status=#{flowStatus} 
+				        	</if>
+				        	<if test="inPerson != null and inPerson !='' ">
+				        		AND rfi.in_person=#{inPerson} 
+				        	</if>
+				        <if test="hunterInterviewStatus != null and hunter_interview_status!=''">
+			        		AND hunter_interview_status=#{hunterInterviewStatus}
+			        	</if>
+			        	<if test="hunterInterviewOperatorTime != null">
+			        		AND hunter_interview_operator_time=#{hunterInterviewOperatorTime}
+			        	</if>
+			        	<if test="hunterInerviewReplayContent != null" >
+			        		AND hunter_inerview_replay_content=#{hunterInerviewReplayContent}
+			        	</if>
+			        	
+			        	<if test="jlInPerson != null and jlInPerson != '' ">
+			        		AND ji.in_person=#{jlInPerson}
+			        	</if>
+			        	
+			        	<if test="jobPositionId != null and jobPositionId != ''">
+			        		AND cji.typeId=#{jobPositionId}
+			        	</if>
+			        	<if test="companyName != null and companyName!=''">
+			        		AND ci.name  like '%${companyName}%' 
+			        	</if>
+			        	<if test="jlName != null and jlName!=''">
+			        		AND ji.name like '%${jlName}%' 
+			        	</if>
+			        	
+					
+					<if test="ids !=null">
+				         AND rfi.audit_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+	</sql>
+	
+	<!-- sql 参数 -->
+	<sql id="getParamSQL">
+						 		rfi.audit_id,
+						 		rfi.company_job_id,
+						 		rfi.jl_id,
+						 		rfi.match_id,
+						 		rfi.enterprise_name,
+						 		rfi.technician_audit_person,
+						 		rfi.technician_audit_content,
+						 		rfi.technician_audit_time,
+						 		rfi.technician_audit_status,
+						 		rfi.enterprise_docking_person,
+						 		rfi.enterprise_docking_status,
+						 		rfi.enterprise_docking_time,
+						 		rfi.enterprise_reply_status,
+						 		rfi.enterprise_reply_content,
+						 		rfi.enterprise_reply_time,
+						 		rfi.hr_notice_person,
+						 		rfi.hr_notice_status,
+						 		rfi.hr_notice_time,
+						 		rfi.hr_notice_feedback_content,
+						 		rfi.enterprise_invitation_time,
+						 		rfi.hr_before_notify_hunter_status,
+						 		rfi.hr_before_notify_hunter_time,
+						 		rfi.hr_before_notify_hunter_person,
+						 		rfi.hunter_goto_interview_status,
+						 		rfi.hunter_replay_content,
+						 		rfi.last_update_time,
+						 		rfi.last_update_person,
+						 		rfi.in_time,
+						 		rfi.flow_status,
+						 		rfi.in_person
+								,a.username as inPersonName,
+								 ci.`name` as companyName,
+								 cji.`name` as companyJobName,
+								 ji.name as jlName,
+						      	 jei.jl_file_path as jlFilePath,
+						      	 a2.username as technicianAuditPersonName,
+						      	 rfi.enterprise_interface_person,
+						      	 a3.username as enterpriseInterfacePersonName,
+						      	 rfi.headhunter_interface_person,
+						      	 a4.username as headhunterInterfacePersonName,
+								rfi.hunter_interview_status,
+						 		rfi.hunter_interview_operator_time,
+						 		rfi.hunter_goto_interview_operator_time,
+						 		rfi.hunter_inerview_replay_content
+	</sql>
+	
+	<!-- 统计sql -->
+	<select id="statisticsZpRecommendFlowInfoInfo" resultType="HashMap">
+		<if test="qtype != null and qtype=='one'">
+		</if>
+		<if test="qtype != null and qtype=='two'">
+		</if>
+	</select>
+
+</mapper>
+

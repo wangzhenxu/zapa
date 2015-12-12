@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ZpEmalTemplate">
+
+	<resultMap type="ZpEmalTemplate" id="zpEmalTemplateMap">
+	        	<id  column="emal_id" property="emalId"></id>
+	        	<result  column="template_title" property="templateTitle" />
+	        	<result  column="template_subject" property="templateSubject" />
+	        	<result  column="template_content" property="templateContent" />
+	        	<result  column="template_type" property="templateType" />
+	        	<result  column="update_time" property="updateTime" />
+	        	<result  column="account_name" property="accountName" />
+	        	<result  column="sort" property="sort" />
+	</resultMap>
+	
+	<!-- 查询 邮件模版列表 -->
+	<select id="queryZpEmalTemplateList" resultMap="zpEmalTemplateMap">
+		SELECT
+						 		zp_emal_template.emal_id,
+			        	
+						 		zp_emal_template.template_title,
+			        	
+						 		zp_emal_template.template_subject,
+			        	
+						 		zp_emal_template.template_content,
+			        	
+						 		zp_emal_template.template_type,
+			        	
+						 		zp_emal_template.update_time,
+			        	
+						 		zp_emal_template.account_name,
+			        	
+						 		zp_emal_template.sort
+			        	
+		FROM
+			zp_emal_template
+		<where>
+							<!-- hr的模版 -->
+							<if test="qtype != null and qtype=='hr'">
+								AND zp_emal_template.template_type in(0,2,3)
+								AND zp_emal_template.template_subject is not null 
+								AND zp_emal_template.template_subject !='' 
+								AND zp_emal_template.template_content is not null 
+								AND zp_emal_template.template_content !='' 
+							</if>
+							<!-- 求职者的模版 -->
+							<if test="qtype != null and qtype=='hunting'">
+								AND zp_emal_template.template_type in(1,2,3)
+								AND zp_emal_template.template_subject is not null 
+								AND zp_emal_template.template_subject !='' 
+								AND zp_emal_template.template_content is not null 
+								AND zp_emal_template.template_content !='' 
+							</if>
+				        	<if test="templateTitle != null">
+				        		AND zp_emal_template.template_title=#{templateTitle} 
+				        	</if>
+				        	<if test="templateSubject != null">
+				        		AND zp_emal_template.template_subject=#{templateSubject} 
+				        	</if>
+				        	<if test="templateContent != null">
+				        		AND zp_emal_template.template_content=#{templateContent} 
+				        	</if>
+				        	<if test="templateType != null">
+				        		AND zp_emal_template.template_type=#{templateType} 
+				        	</if>
+				        	<if test="updateTime != null">
+				        		AND zp_emal_template.update_time=#{updateTime} 
+				        	</if>
+				        	<if test="accountName != null">
+				        		AND zp_emal_template.account_name=#{accountName} 
+				        	</if>
+				        	<if test="sort != null">
+				        		AND zp_emal_template.sort=#{sort} 
+				        	</if>
+		</where>
+		ORDER BY zp_emal_template.sort 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 邮件模版列表条数 -->
+	<select id="getZpEmalTemplateListCount" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			zp_emal_template
+		<where>
+				<if test="qtype != null and qtype=='like'">
+				</if>
+				        	<if test="templateTitle != null">
+				        		AND zp_emal_template.template_title=#{templateTitle} 
+				        	</if>
+				        	<if test="templateSubject != null">
+				        		AND zp_emal_template.template_subject=#{templateSubject} 
+				        	</if>
+				        	<if test="templateContent != null">
+				        		AND zp_emal_template.template_content=#{templateContent} 
+				        	</if>
+				        	<if test="templateType != null">
+				        		AND zp_emal_template.template_type=#{templateType} 
+				        	</if>
+				        	<if test="updateTime != null">
+				        		AND zp_emal_template.update_time=#{updateTime} 
+				        	</if>
+				        	<if test="accountName != null">
+				        		AND zp_emal_template.account_name=#{accountName} 
+				        	</if>
+				        	<if test="sort != null">
+				        		AND zp_emal_template.sort=#{sort} 
+				        	</if>
+		</where>
+	</select>
+	
+	
+	<!-- 添加 邮件模版 -->
+	<insert id="addZpEmalTemplate" flushCache="true" useGeneratedKeys="true" keyProperty="emalId">
+		INSERT INTO zp_emal_template
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="templateTitle != null">
+		        		template_title,
+		        	</if>
+		        	<if test="templateSubject != null">
+		        		template_subject,
+		        	</if>
+		        	<if test="templateContent != null">
+		        		template_content,
+		        	</if>
+		        	<if test="templateType != null">
+		        		template_type,
+		        	</if>
+		        	<if test="updateTime != null">
+		        		update_time,
+		        	</if>
+		        	<if test="accountName != null">
+		        		account_name,
+		        	</if>
+		        	<if test="sort != null">
+		        		sort,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="templateTitle != null">
+			        		#{templateTitle},
+			        	</if>
+			        	<if test="templateSubject != null">
+			        		#{templateSubject},
+			        	</if>
+			        	<if test="templateContent != null">
+			        		#{templateContent},
+			        	</if>
+			        	<if test="templateType != null">
+			        		#{templateType},
+			        	</if>
+			        	<if test="updateTime != null">
+			        		#{updateTime},
+			        	</if>
+			        	<if test="accountName != null">
+			        		#{accountName},
+			        	</if>
+			        	<if test="sort != null">
+			        		#{sort},
+			        	</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 邮件模版 -->
+	<update id="updateZpEmalTemplate" >
+		UPDATE  zp_emal_template
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="templateTitle != null">
+			        		template_title=#{templateTitle},
+			        	</if>
+			        	<if test="templateSubject != null">
+			        		template_subject=#{templateSubject},
+			        	</if>
+			        	<if test="templateContent != null">
+			        		template_content=#{templateContent},
+			        	</if>
+			        	<if test="templateType != null">
+			        		template_type=#{templateType},
+			        	</if>
+			        	<if test="updateTime != null">
+			        		update_time=#{updateTime},
+			        	</if>
+			        	<if test="accountName != null">
+			        		account_name=#{accountName},
+			        	</if>
+			        	<if test="sort != null">
+			        		sort=#{sort},
+			        	</if>
+		</trim>
+		WHERE emal_id=#{emalId}
+	</update>
+
+	<!-- 删除  邮件模版 -->
+	<delete id="deleteZpEmalTemplate">
+		DELETE FROM zp_emal_template 
+		<where>
+				        	<if test="emalId != null">
+				        		AND emal_id=#{emalId} 
+				        	</if>
+				        	<if test="templateTitle != null">
+				        		AND template_title=#{templateTitle} 
+				        	</if>
+				        	<if test="templateSubject != null">
+				        		AND template_subject=#{templateSubject} 
+				        	</if>
+				        	<if test="templateContent != null">
+				        		AND template_content=#{templateContent} 
+				        	</if>
+				        	<if test="templateType != null">
+				        		AND template_type=#{templateType} 
+				        	</if>
+				        	<if test="updateTime != null">
+				        		AND update_time=#{updateTime} 
+				        	</if>
+				        	<if test="accountName != null">
+				        		AND account_name=#{accountName} 
+				        	</if>
+				        	<if test="sort != null">
+				        		AND sort=#{sort} 
+				        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  邮件模版 -->
+	<select id="getZpEmalTemplateById" resultMap="zpEmalTemplateMap">
+		SELECT
+						 		ZpEmalTemplate.emal_id,
+						 		ZpEmalTemplate.template_title,
+						 		ZpEmalTemplate.template_subject,
+						 		ZpEmalTemplate.template_content,
+						 		ZpEmalTemplate.template_type,
+						 		ZpEmalTemplate.update_time,
+						 		ZpEmalTemplate.account_name,
+						 		ZpEmalTemplate.sort
+		FROM
+			zp_emal_template
+		WHERE 
+		zp_emal_template.emal_id=#{emalId}
+		
+	</select>
+
+</mapper>

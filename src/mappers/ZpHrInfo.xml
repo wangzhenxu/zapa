@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ZpHrInfo">
+
+	<resultMap type="ZpHrInfo" id="zpHrInfoMap">
+	        	<id  column="hr_id" property="hrId"></id>
+	        	<result  column="qq_name" property="qqName" />
+	        	<result  column="qq_number" property="qqNumber" />
+	        	<result  column="address_id" property="addressId" />
+	        	<result  column="in_person" property="inPerson" />
+	        	<result  column="in_time" property="inTime" />
+	        	<result  column="send_status" property="sendStatus" />
+	        	<result  column="last_send_time" property="lastSendTime" />
+	        	<result  column="sender" property="sender" />
+	</resultMap>
+	
+	<!-- 查询 hr(人力资源hr)列表 -->
+	<select id="queryZpHrInfoList" resultMap="zpHrInfoMap">
+		SELECT
+						 		zp_hr_info.hr_id,
+			        	
+						 		zp_hr_info.qq_name,
+			        	
+						 		zp_hr_info.qq_number,
+			        	
+						 		zp_hr_info.address_id,
+			        	
+						 		zp_hr_info.in_person,
+			        	
+						 		zp_hr_info.in_time,
+						 		
+						 		zp_hr_info.send_status,
+						 		
+						 		zp_hr_info.last_send_time,
+						 		
+						 		
+			        			zp_hr_info.sender
+		FROM
+			zp_hr_info 
+		<where>
+				        	<if test="qtype == null and qqName != null">
+				        		AND zp_hr_info.qq_name=#{qqName} 
+				        	</if>
+				        	<if test="qtype == null and qqNumber != null">
+				        		AND zp_hr_info.qq_number=#{qqNumber} 
+				        	</if>
+				        		
+				        	<if test="qtype != null and qtype=='like'">
+				        		<if test="qqName != null">
+				        			AND zp_hr_info.qq_name like '%${qqName}%' 
+					        	</if>
+					        	<if test="qqNumber != null">
+					        		AND zp_hr_info.qq_number like '%${qqNumber}%' 
+					        	</if>
+				        	</if>
+				        	
+				        	<if test="addressId != null">
+				        		AND zp_hr_info.address_id=#{addressId} 
+				        	</if>
+				        	<if test="inPerson != null">
+				        		AND zp_hr_info.in_person=#{inPerson} 
+				        	</if>
+				        	<if test="inTime != null">
+				        		AND zp_hr_info.in_time=#{inTime} 
+				        	</if>
+				        	<if test="sendStatus != null and sendStatus != ''">
+				        		AND zp_hr_info.send_status=#{sendStatus} 
+				        	</if>
+				        	<if test="sender != null">
+				        		AND zp_hr_info.sender=#{sender} 
+				        	</if>
+				        	
+		</where>
+		ORDER BY zp_hr_info.hr_id desc 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 hr(人力资源hr)列表条数 -->
+	<select id="getZpHrInfoListCount" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			zp_hr_info
+		<where>
+							
+				        	<if test="qtype == null and qqName != null">
+				        		AND zp_hr_info.qq_name=#{qqName} 
+				        	</if>
+				        	<if test="qtype == null and qqNumber != null">
+				        		AND zp_hr_info.qq_number=#{qqNumber} 
+				        	</if>
+				        		
+				        	<if test="qtype != null and qtype=='like'">
+				        		<if test="qqName != null">
+				        			AND zp_hr_info.qq_name like '%${qqName}%' 
+					        	</if>
+					        	<if test="qqNumber != null">
+					        		AND zp_hr_info.qq_number like '%${qqNumber}%' 
+					        	</if>
+				        	</if>
+				        	
+				        	<if test="addressId != null">
+				        		AND zp_hr_info.address_id=#{addressId} 
+				        	</if>
+				        	<if test="inPerson != null">
+				        		AND zp_hr_info.in_person=#{inPerson} 
+				        	</if>
+				        	<if test="inTime != null">
+				        		AND zp_hr_info.in_time=#{inTime} 
+				        	</if>
+				        	<if test="sendStatus != null and sendStatus != ''">
+				        		AND zp_hr_info.send_status=#{sendStatus} 
+				        	</if>
+				        	<if test="sender != null">
+				        		AND zp_hr_info.sender=#{sender} 
+				        	</if>
+		</where>
+	</select>
+	
+	
+	<!-- 添加 hr(人力资源hr) -->
+	<insert id="addZpHrInfo" flushCache="true" useGeneratedKeys="true" keyProperty="hrId">
+		INSERT INTO zp_hr_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="qqName != null">
+		        		qq_name,
+		        	</if>
+		        	<if test="qqNumber != null">
+		        		qq_number,
+		        	</if>
+		        	<if test="addressId != null">
+		        		address_id,
+		        	</if>
+		        	<if test="inPerson != null">
+		        		in_person,
+		        	</if>
+		        	<if test="inTime != null">
+		        		in_time,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="qqName != null">
+			        		#{qqName},
+			        	</if>
+			        	<if test="qqNumber != null">
+			        		#{qqNumber},
+			        	</if>
+			        	<if test="addressId != null">
+			        		#{addressId},
+			        	</if>
+			        	<if test="inPerson != null">
+			        		#{inPerson},
+			        	</if>
+			        	<if test="inTime != null">
+			        		#{inTime},
+			        	</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 hr(人力资源hr) -->
+	<update id="updateZpHrInfo" >
+		UPDATE  zp_hr_info
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="qqName != null and qqName != '' " >
+			        		qq_name=#{qqName},
+			        	</if>
+			        	<if test="qqNumber != null and qqName != '' ">
+			        		qq_number=#{qqNumber},
+			        	</if>
+			        	<if test="addressId != null and qqName != '' ">
+			        		address_id=#{addressId},
+			        	</if>
+			        	<if test="inPerson != null and qqName != '' ">
+			        		in_person=#{inPerson},
+			        	</if>
+			        	<if test="inTime != null and qqName != '' ">
+			        		in_time=#{inTime},
+			        	</if>
+			        	<if test="sendStatus != null  and sendStatus != '' ">
+				        		send_status=#{sendStatus} ,
+			        	</if>
+			        	<if test="sender != null">
+			        		     sender=#{sender}, 
+			        	</if>
+			        	<if test="lastSendTime != null">
+			        		     last_send_time=#{lastSendTime}, 
+			        	</if>
+		</trim>
+		WHERE hr_id=#{hrId}
+	</update>
+
+	<!-- 删除  hr(人力资源hr) -->
+	<delete id="deleteZpHrInfo">
+		DELETE FROM zp_hr_info 
+		<where>
+				        	<if test="hrId != null">
+				        		AND hr_id=#{hrId} 
+				        	</if>
+				        	<if test="qqName != null">
+				        		AND qq_name=#{qqName} 
+				        	</if>
+				        	<if test="qqNumber != null">
+				        		AND qq_number=#{qqNumber} 
+				        	</if>
+				        	<if test="addressId != null">
+				        		AND address_id=#{addressId} 
+				        	</if>
+				        	<if test="inPerson != null">
+				        		AND in_person=#{inPerson} 
+				        	</if>
+				        	<if test="inTime != null">
+				        		AND in_time=#{inTime} 
+				        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  hr(人力资源hr) -->
+	<select id="getZpHrInfoById" resultMap="zpHrInfoMap">
+		SELECT
+						 		ZpHrInfo.hr_id,
+						 		ZpHrInfo.qq_name,
+						 		ZpHrInfo.qq_number,
+						 		ZpHrInfo.address_id,
+						 		ZpHrInfo.in_person,
+						 		ZpHrInfo.in_time
+		FROM
+			zp_hr_info
+		WHERE 
+		zp_hr_info.hr_id=#{hrId}
+		
+	</select>
+
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ZpCompanyJobDemandKeys">
+
+	<resultMap type="ZpCompanyJobDemandKeys" id="zpCompanyJobDemandKeysMap">
+	        	<id  column="key_id" property="keyId"></id>
+	        	<result  column="job_id" property="jobId" />
+	        	<result  column="keyword" property="keyword" />
+	        	<result  column="proportion" property="proportion" />
+	</resultMap>
+	
+	<!-- 查询 公司职位要求关键字列表 -->
+	<select id="queryZpCompanyJobDemandKeysList" resultMap="zpCompanyJobDemandKeysMap">
+		SELECT
+						 		zp_company_job_demand_keys.key_id,
+			        	
+						 		zp_company_job_demand_keys.job_id,
+			        	
+						 		zp_company_job_demand_keys.keyword,
+			        	
+						 		zp_company_job_demand_keys.proportion
+			        	
+		FROM
+			zp_company_job_demand_keys
+		<where>
+							<if test="qtype != null and qtype=='like'">
+							</if>
+				        	<if test="jobId != null and jobId !='' ">
+				        		AND zp_company_job_demand_keys.job_id=#{jobId} 
+				        	</if>
+				        	<if test="keyword != null and keyword !='' ">
+				        		AND zp_company_job_demand_keys.keyword=#{keyword} 
+				        	</if>
+				        	<if test="proportion != null and proportion !='' ">
+				        		AND zp_company_job_demand_keys.proportion=#{proportion} 
+				        	</if>
+					
+					<if test="ids !=null">
+				         AND zp_company_job_demand_keys.key_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+		ORDER BY zp_company_job_demand_keys.key_id desc 
+		<if test="skipResults!=null">
+				limit #{skipResults} ,#{maxResults}
+		</if>
+		
+	</select>
+	
+	<!-- 查询 公司职位要求关键字列表条数 -->
+	<select id="getZpCompanyJobDemandKeysListCount" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			zp_company_job_demand_keys
+		<where>
+							<if test="qtype != null and qtype=='like'">
+							</if>
+				        	<if test="jobId != null and jobId !=''">
+				        		AND zp_company_job_demand_keys.job_id=#{jobId} 
+				        	</if>
+				        	<if test="keyword != null and keyword !=''">
+				        		AND zp_company_job_demand_keys.keyword=#{keyword} 
+				        	</if>
+				        	<if test="proportion != null and proportion !=''">
+				        		AND zp_company_job_demand_keys.proportion=#{proportion} 
+				        	</if>
+				<if test="ids !=null">
+				         AND zp_company_job_demand_keys.key_id IN
+						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+		</where>
+	</select>
+	
+	
+	<!-- 添加 公司职位要求关键字 -->
+	<insert id="addZpCompanyJobDemandKeys" flushCache="true" useGeneratedKeys="true" keyProperty="keyId">
+		INSERT INTO zp_company_job_demand_keys
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		        	<if test="jobId != null">
+		        		job_id,
+		        	</if>
+		        	<if test="keyword != null">
+		        		keyword,
+		        	</if>
+		        	<if test="proportion != null">
+		        		proportion,
+		        	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			        	<if test="jobId != null">
+			        		#{jobId},
+			        	</if>
+			        	<if test="keyword != null">
+			        		#{keyword},
+			        	</if>
+			        	<if test="proportion != null">
+			        		#{proportion},
+			        	</if>
+		</trim>
+	</insert>
+	
+	<!-- 修改 公司职位要求关键字 -->
+	<update id="updateZpCompanyJobDemandKeys" >
+		UPDATE  zp_company_job_demand_keys
+		<trim prefix="set" suffixOverrides=",">
+			        	<if test="jobId != null">
+			        		job_id=#{jobId},
+			        	</if>
+			        	<if test="keyword != null">
+			        		keyword=#{keyword},
+			        	</if>
+			        	<if test="proportion != null">
+			        		proportion=#{proportion},
+			        	</if>
+		</trim>
+		WHERE key_id=#{keyId}
+	</update>
+
+	<!-- 删除  公司职位要求关键字 -->
+	<delete id="deleteZpCompanyJobDemandKeys">
+		DELETE FROM zp_company_job_demand_keys 
+		<where>
+				        	<if test="keyId != null">
+				        		AND key_id=#{keyId} 
+				        	</if>
+				        	<if test="jobId != null">
+				        		AND job_id=#{jobId} 
+				        	</if>
+				        	<if test="keyword != null">
+				        		AND keyword=#{keyword} 
+				        	</if>
+				        	<if test="proportion != null">
+				        		AND proportion=#{proportion} 
+				        	</if>
+		</where>
+	</delete>
+	
+	<!-- 获得  公司职位要求关键字 -->
+	<select id="getZpCompanyJobDemandKeysById" resultMap="zpCompanyJobDemandKeysMap">
+		SELECT
+						 		zp_company_job_demand_keys.key_id,
+						 		zp_company_job_demand_keys.job_id,
+						 		zp_company_job_demand_keys.keyword,
+						 		zp_company_job_demand_keys.proportion
+		FROM
+			zp_company_job_demand_keys
+		WHERE 
+		zp_company_job_demand_keys.key_id=#{keyId}
+		
+	</select>
+
+</mapper>
