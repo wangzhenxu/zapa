@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 
-	<display-name>langyan</display-name>
+	<display-name>zapa</display-name>
 
 	<!-- spring配置文件，这些文件启动程序即加载 -->
 	<context-param>
@@ -27,15 +27,7 @@
    </listener>
 
 
-	<!-- shiro,find spring bean by filter name is 'shiroFilter' -->
-	<filter>
-		<filter-name>shiroFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<param-name>targetFilterLifecycle</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
+	
 	<!-- encoding -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -56,15 +48,7 @@
 	</filter>
 
 	<!-- filter mapping config, execute sort -->
-	<filter-mapping>
-		<filter-name>shiroFilter</filter-name>
-		<url-pattern>*.action</url-pattern>
-		<url-pattern>*.html</url-pattern>
-		<dispatcher>ERROR</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>INCLUDE</dispatcher>
-	</filter-mapping>
+	
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
