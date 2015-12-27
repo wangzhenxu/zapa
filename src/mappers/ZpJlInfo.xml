@@ -709,5 +709,45 @@
        	</if>
 	</select>
 	
+	<!-- 统计sql -->
+	<select id="statisticsJlInfo" resultType="HashMap">
+		<if test="qtype != null and qtype=='one'">
+		     SELECT
+				aei.real_name as realName,
+				count(1) jlcount,
+				group_concat(jl.`name`) as names,
+				group_concat(CAST(jl.job_position_level_id AS char)) as positionlevels,
+				GROUP_CONCAT(CAST(jl.job_position_id AS char)) as positions
+			FROM
+				zp_jl_info jl
+			  INNER JOIN zp_jl_expand_info jei ON  jl.jl_id = jei.jl_id
+			  AND jei.audit_type_id=#{auditTypeId}
+			  <if test="startTime != null">
+			  	<![CDATA[ AND (jei.technician_audit_time>#{startTime} AND jei.technician_audit_time<#{endTime}  ) ]]>	
+			  </if>
+			  INNER JOIN account a ON a.account_id = jl.in_person
+			  INNER JOIN account_expand_info aei ON a.account_id = aei.account_id
+			WHERE
+				1 = 1
+			GROUP BY
+				jl.in_person
+		</if>
+		<if test="qtype != null and qtype=='two'">
+			SELECT
+				aei.real_name AS realName ,
+				jl.name,
+				jl.job_position_id as jobPositionId
+			FROM
+				zp_recommend_flow_info rfi
+			INNER JOIN zp_jl_info jl ON rfi.jl_id = jl.jl_id 
+			AND rfi.hunter_goto_interview_status=#{hunterGotoInterviewStatus}
+			<if test="startTime != null">
+				<![CDATA[ AND (rfi.hunter_goto_interview_operator_time>#{startTime} AND rfi.hunter_goto_interview_operator_time<#{endTime}  ) ]]>	
+			</if>			
+			INNER JOIN account a ON a.account_id = jl.in_person
+			INNER JOIN account_expand_info aei ON a.account_id = aei.account_id
+			
+		</if>
+	</select>
 
 </mapper>

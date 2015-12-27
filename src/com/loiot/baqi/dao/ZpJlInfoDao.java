@@ -150,6 +150,16 @@ public class ZpJlInfoDao extends SqlSessionDaoSupport{
         return getSqlSession().selectList("ZpJlInfo.queryZpJlInfoList",p);
     }
     
+    /**
+     * 统计 简历
+     * 
+     * @return 简历
+     */
+    public List<HashMap<String,Object>> statisticsJlInfo(HashMap<String, Object> pMap )throws Exception {
+    	List<HashMap<String,Object>> p = null; 
+    	p =(List)getSqlSession().selectList("ZpJlInfo.statisticsJlInfo",pMap);
+    	return p;
+    }
     
 
 }

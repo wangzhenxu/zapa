@@ -871,7 +871,8 @@ public class DateUtil {
     
     public static void main(String[] args) {  
         String date = "2006-06-12";  
-          
+        Date s = DateUtil.addDays(new Date(), -1);
+        System.out.println(s);
       /*  DateUtil.compareDate(date, null, 0);  
         DateUtil.compareDate(date, null, 1);  */
         //DateUtil.compareDate(date, null, 2);  

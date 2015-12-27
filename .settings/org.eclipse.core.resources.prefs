@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/classes/conf/message.properties=UTF-8
 encoding//src/conf/email.properties=utf-8
 encoding//src/conf/message.properties=UTF-8
 encoding/<project>=UTF-8
