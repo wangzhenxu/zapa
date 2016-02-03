@@ -56,6 +56,9 @@ public class ZpCompanyJobInfo  implements java.io.Serializable{
 	    private String address;//工作地点
 	    
 	    List<ZpCompanyJobDemandKeys> keys;
+	    
+		private int hdPositionId;//猎上id
+
 
 
 	public ZpCompanyJobInfo(){

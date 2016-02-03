@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import com.loiot.baqi.pojo.TaskScheduleJob;
 import com.loiot.commons.utils.DateUtil;
+import com.loiot.commons.utils.StringUtil;
 
 public class NotifyJob implements Job {
     private Logger log = LoggerFactory.getLogger(this.getClass());
+    private  String doTaskMethodName="doTask";
 
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -23,7 +25,10 @@ public class NotifyJob implements Job {
         Object service = com.loiot.baqi.listener.JobListener.getApplicationContext().getBean(task.getSpringId());
         Method method = null; 
         try {
-			method = service.getClass().getDeclaredMethod(task.getMethodName());
+	    	if(!StringUtil.isBlank(task.getMethodName())){
+	    		doTaskMethodName=task.getMethodName();
+	    	}
+			method = service.getClass().getDeclaredMethod(doTaskMethodName);
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

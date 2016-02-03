@@ -159,6 +159,7 @@ public class TaskScheduleJobDao extends SqlSessionDaoSupport{
      */
     public List<TaskScheduleJob> queryTaskScheduleJobList()throws Exception {
         Map<String, Object> params = new HashMap<String, Object>();
+        params.put("jobStatus", 1);
         return getSqlSession().selectList("TaskScheduleJob.queryTaskScheduleJobList",params);
     }
     

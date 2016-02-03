@@ -46,6 +46,8 @@ public class JobService {
 
     @Resource
  	private TaskScheduleJobDao taskScheduleJobDao;
+    
+    private final String  notifyClass="com.loiot.baqi.service.job.NotifyJob";
 
     
     public void doInitScheduler() throws Exception{
@@ -72,7 +74,8 @@ public class JobService {
 		    	   Object object = null;  
 		           Class clazz = null;    
 		    	try {
-					clazz = Class.forName(task.getBeanClass());
+					//clazz = Class.forName(task.getBeanClass());
+		    		clazz = Class.forName(task.getBeanClass());
 					object = clazz.newInstance();  
 				} catch (Exception e) {
 					e.printStackTrace();
