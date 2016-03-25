@@ -118,8 +118,9 @@ private static Set<Cookie> AllCookies = new HashSet<Cookie>();
     }
 	
 	public static void main(String[] args) throws Exception {
-		//getCoordInfoForHttp(null);
-		paseHdSiteInfo();
+		getCoordInfoForHttp(null);
+		//paseHdSiteInfo();
+		
 			
 	}
 	
@@ -189,7 +190,7 @@ private static Set<Cookie> AllCookies = new HashSet<Cookie>();
 			 		//坐标集合
 			 		CoordInfo coord = new CoordInfo();
 			 		coord.setHdLocation(companyJob.getAddress());
-			 		coord.setHdPositionId(companyJob.getHdPositionId());
+			 		//coord.setHdPositionId(companyJob.getHdCode());
 			 		positons.add(coord);
 			 		
 			 		ComapnyAndComapnyJob cs = new ComapnyAndComapnyJob();
@@ -247,7 +248,7 @@ private static Set<Cookie> AllCookies = new HashSet<Cookie>();
 		ZpCompanyInfo company=new ZpCompanyInfo();
 		company.setAddress(enterBean.getAddress());
 		company.setName(enterBean.getName());
-		//company.setDesc(enterBean.getIntroduce());
+		company.setDesc(enterBean.getIntroduce());
 		company.setScaleId(HDTypes.getScaleId(enterBean.getScale()));
 		company.setRegtime(HDTypes.getRegTime(enterBean.getCreateTime()));
 		company.setFinancingLevelId(HDTypes.getFinancingLevel(enterBean.getDevelopStatus()));
@@ -280,7 +281,7 @@ private static Set<Cookie> AllCookies = new HashSet<Cookie>();
 		job.setIsDelete((int)PauseStartType.START.getCode());
 		job.setAddress(hdPosi.getLocation());
 		job.setZpUrgencyStatusId(HDTypes.getZpUrgencyStatusId(hdPosi.getPriority()));
-		job.setHdPositionId(hdPosi.getPositionAssignId());
+		//job.setHdCode(hdPosi.get);
 		return job;
 	}
 	
@@ -444,4 +445,6 @@ private static Set<Cookie> AllCookies = new HashSet<Cookie>();
 	
 		return nvps;
 	}
+	
+	
 }

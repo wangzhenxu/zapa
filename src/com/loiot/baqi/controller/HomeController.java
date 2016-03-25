@@ -12,11 +12,13 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.loiot.baqi.service.job.FetchingHdCompanyAndJobInfoService;
 import com.loiot.baqi.status.AccountType;
 import com.loiot.baqi.utils.UserSessionUtils;
 import com.loiot.commons.utils.FileUtil;
@@ -31,7 +33,9 @@ import com.loiot.commons.utils.FileUtil;
 public class HomeController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-
+     
+	@Autowired
+	FetchingHdCompanyAndJobInfoService fetchingHdCompanyAndJobInfoService;
 	/**
 	 * 跳转欢迎页
 	 * 
@@ -40,17 +44,34 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/getAreaCoordInfo")
 	public String getAreaCoordInfo(HttpServletRequest request,ModelMap model) throws IOException {
-		/* Enumeration headerNames = request.getHeaderNames();
-		    while (headerNames.hasMoreElements()) {
-		        String key = (String) headerNames.nextElement();
-		        String value = request.getHeader(key);
-		        System.out.println("key=" +key +" value="+value );
-		    }*/
-	   //System.out.println("a"+new String(request.getParameter("a").getBytes("iso-8859-1"),"utf-8"));
-	    String coordListJson =FileUtil.readFileToString(new File("d:\\coordListJson.txt"));
+	    String coordListJson = request.getParameter("coordListJson");
+	    //coordListJson= "[{\"hdLocation\":\"朝阳区酒仙桥北路甲10号院105号楼\",\"hdPositionId\":78565},{\"hdLocation\":\"朝阳区酒仙桥北路甲10号院105号楼\",\"hdPositionId\":78565}]";
+	    
+	    //System.out.println("-----------:"+coordListJson+"----------------");
+		/*if(StringUtils.isBlank(coordListJson)){
+			System.out.println("-------------------null--------------");
+		}*/
+		request.setAttribute("coordListJson", coordListJson);
+		//request.setAttribute("fff", 111);
+
+		//System.out.println("aaaaaa:"+request.getAttribute("coordListJson"));
+	    //model.put("coordListJson",coordListJson );
+	    //model.put("fff",111 );
 		
-		//System.out.println("coordListJson"+coordListJson);
-		model.put("coordListJson",coordListJson );
 		return "areaCoordInfo";
 	}
+	
+	/**
+	 * 测试爬虫
+	 * 
+	 * @return 首页模板位置
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/testTask")
+	public String doTask(HttpServletRequest request,ModelMap model) throws IOException {
+		fetchingHdCompanyAndJobInfoService.doTask();
+		//fetchingHdCompanyAndJobInfoService.getCoordInfoForHttp(null);
+		return "succeed";
+	}
+	
 }

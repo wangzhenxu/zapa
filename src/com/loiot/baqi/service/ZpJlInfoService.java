@@ -196,12 +196,12 @@ public class ZpJlInfoService{
     		List<ZpDictionaryInfo> dicList = zpDictionaryInfoDao.queryZpDictionaryInfoList();
     		for(HashMap<String,Object> map : list){
     			String realName =String.valueOf(map.get("realName"));	
-    			String name =String.valueOf(map.get("name"));	
+    			String jlName =String.valueOf(map.get("name"));	
     			Long jobPositionId =Long.parseLong(String.valueOf(map.get("jobPositionId")));	
     			if(emailContent.length()==0){
-    				emailContent=ApplicationConst.getMessage("10105", realName,name+" ("+getDicName(jobPositionId, dicList)+")");
+    				emailContent=ApplicationConst.getMessage("10105", realName,jlName+" ("+getDicName(jobPositionId, dicList)+")");
     			} else{
-    				emailContent=emailContent+" \n <br> " +ApplicationConst.getMessage("10105", realName,name+" ("+getDicName(jobPositionId, dicList)+")");
+    				emailContent=emailContent+" \n <br> " +ApplicationConst.getMessage("10105", realName,jlName+" ("+getDicName(jobPositionId, dicList)+")");
     			}
     		}
     	}

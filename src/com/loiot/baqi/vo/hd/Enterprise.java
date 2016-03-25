@@ -103,4 +103,6 @@ public class Enterprise implements java.io.Serializable{
 	private int updateUserId;
 
 	private String website; //网站
+	
+	private long enterpriseId;//企业id
 }

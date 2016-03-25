@@ -42,6 +42,9 @@
 	        	<result  column="coord_y" property="coordY" />
         		<result  column="address" property="address" />
         		<result  column="keyword_status" property="keywordStatus" />
+        		<result  column="hd_code" property="hdCode" />
+		       	<result  column="source" property="source" />
+        		<result  column="require_interview_num" property="requireInterviewNum" />
         		
 
 	        	
@@ -130,7 +133,11 @@
 			        			cji.address,
 						 		cji.area_id,
 						 		a.username as inPersonName,
-						 		ci.name as companyName
+						 		ci.name as companyName,
+						 		cji.hd_code,
+								cji.source,
+								cji.require_interview_num
+						 		
 			        	
 		FROM
 			zp_company_job_info cji LEFT JOIN zp_company_job_demand_keys cjdk ON cji.job_id= cjdk.job_id
@@ -138,7 +145,7 @@
 		    left join account a on a.account_id = cji.in_person
 		    
 		<where>
-							1=1  AND ci.is_delete=1
+							1=1  and ci.is_delete=1 
 		
 							<if test="qtype != null and qtype=='like'">
 									<if test="name != null and name !='' ">
@@ -185,6 +192,7 @@
 				        	
 				        	<if test="keywordStatus != null and keywordStatus !='' ">
 				        		AND cji.keyword_status>=${keywordStatus}
+				        		
 				        	</if>
 				        	
 				        	<if test="sex != null and sex !='' ">
@@ -239,6 +247,16 @@
 				        	<if test="areaId != null and areaId !=''">
 				        		AND cji.area_id=#{areaId} 
 				        	</if>
+				        	<if test="source != null and source !='' ">
+				        		AND cji.source=#{source} 
+				        	</if>
+				        	<if test="hdCode != null and hdCode !='' ">
+				        		AND cji.hd_code=#{hdCode} 
+				        	</if>
+				        	<if test="requireInterviewNum != null and requireInterviewNum !='' ">
+				        		AND cji.require_interview_num=#{requireInterviewNum} 
+				        	</if>
+				        	
 					<if test="ids !=null">
 				         AND cji.jobPositionLevelId IN
 						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
@@ -252,6 +270,14 @@
 									 ${item} 
 							</foreach>
 			        </if>
+			        
+			         <if test="notJobIds !=null">
+				         AND cji.job_id NOT IN
+						    <foreach  item="item" collection="notJobIds"  index="index" open="(" separator="," close=")"> 
+									 ${item} 
+							</foreach>
+			        </if>
+			        
 		</where>
 		ORDER BY cji.job_id desc 
 		<if test="skipResults!=null">
@@ -268,7 +294,7 @@
 			zp_company_job_info cji
 		   INNER JOIN  zp_company_info ci ON cji.company_id =  ci.company_id 
 		<where>
-							1=1  AND ci.is_delete=1
+							1=1  and ci.is_delete=1 
 							<if test="qtype != null and qtype=='like'">
 									<if test="name != null and name !='' ">
 						        		AND ci.name like '%${name}' 
@@ -365,6 +391,17 @@
 				        	</if>
 				        	<if test="areaId != null and areaId !=''">
 				        		AND cji.area_id=#{areaId} 
+				        	</if>
+				        	
+				        	
+							<if test="source != null and source !='' ">
+				        		AND cji.source=#{source} 
+				        	</if>
+				        	<if test="hdCode != null and hdCode !='' ">
+				        		AND cji.hd_code=#{hdCode} 
+				        	</if>
+				        	<if test="requireInterviewNum != null and requireInterviewNum !='' ">
+				        		AND cji.require_interview_num=#{requireInterviewNum} 
 				        	</if>
 				<if test="ids !=null">
 				         AND cji.job_id IN
@@ -479,6 +516,16 @@
 		        	<if test="address != null">
 		        		address,
 		        	</if>
+		        	<if test="source != null">
+		        		source,
+		        	</if>
+		        	<if test="hdCode != null">
+		        		hd_code,
+		        	</if>
+		        	<if test="requireInterviewNum != null">
+		        		require_interview_num,
+		        	</if>
+		        	
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			        	<if test="companyId != null">
@@ -580,6 +627,17 @@
 			        	<if test="address != null">
 		        			#{address},
 		        		</if>
+		        		
+		        		<if test="source != null">
+		        		  #{source},
+		        		</if>
+			        	<if test="hdCode != null">
+			        		#{hdCode},
+			        	</if>
+			        	<if test="requireInterviewNum != null">
+			        		#{requireInterviewNum},
+			        	</if>
+		        		
 		</trim>
 	</insert>
 	
@@ -687,6 +745,16 @@
 			        	<if test="address != null">
 		        			address=#{address},
 		        		</if>
+		        		<if test="source != null">
+				        	source=#{source},
+			        	</if>
+			        	<if test="hdCode != null">
+			        		hd_code=#{hdCode}, 
+			        	</if>
+			        	<if test="requireInterviewNum != null">
+			        		require_interview_num=#{requireInterviewNum}, 
+			        	</if>
+	        		
 		</trim>
 		WHERE job_id=#{jobId}
 	</update>
@@ -835,6 +903,9 @@
 						 		cji.coord_y,
 			        			cji.address,
 						 		cji.area_id,
+						 		cji.hd_code,
+								cji.source,
+								cji.require_interview_num,
 						 		
 						 		ci.company_id AS companyAreaId,
 			        			a.username as inPersonName,

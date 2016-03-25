@@ -1,6 +1,7 @@
 package com.loiot.baqi.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,14 +22,20 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
+import com.loiot.commons.utils.IOUtil;
 
 public class HtmlUnitUtil {
 	private static Set<Cookie> AllCookies = new HashSet<Cookie>();
     private static Logger log = LoggerFactory.getLogger(HtmlUnitUtil.class);
 
+    public static WebClient wc;
+    
+    
 	public static String webClientPost(String url, Map<String, String > params){
+		String resultContent="";
 		try {
 			WebClient wc = WebClientInit();
 			WebRequest req = new WebRequest(new URL(url), HttpMethod.POST);
@@ -42,11 +49,10 @@ public class HtmlUnitUtil {
 			
 			
 			if(page instanceof UnexpectedPage){
-				return ((UnexpectedPage)page).getWebResponse().getContentAsString();
+				 resultContent =((UnexpectedPage)page).getWebResponse().getContentAsString();
 			}else{
-				return ((HtmlPage)page).asXml();
+				 resultContent =((HtmlPage)page).asXml();
 			}
-			
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -54,17 +60,21 @@ public class HtmlUnitUtil {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally{
+			wc.closeAllWindows();
 		}
-		return null;
+		return resultContent;
 		
 	}
 
 	public static String webClientGet(String url,int min,int max){
-		
+		String responseContent="";
 		try {
+			
 			System.out.println("fetch url:"+url);
 			Thread.sleep(com.loiot.commons.utils.RandomUtil.nextInt(min, max));
 			WebClient wc = WebClientInit();
+			
 			WebRequest req = new WebRequest(new URL(url), HttpMethod.GET);
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("Access-Control-Allow-Origin", "hd.hunteron.com");
@@ -79,22 +89,37 @@ public class HtmlUnitUtil {
 			
 			Set<Cookie> cooks = wc.getCookieManager().getCookies();
 			
-			
 			AllCookies.addAll(cooks);
 			
 			log.info("login cookies:"+JsonUtils.toJson(AllCookies));
 
+			
+			WebResponse webResponse = page.getWebResponse();  
+		      
+		    int status = webResponse.getStatusCode();  
+		    
 			/*for(Cookie c : cooks){
 				System.out.println("0"+c.getName() +":"+c.getValue());
 			}*/
-			
-			if(page instanceof UnexpectedPage){
-				return ((UnexpectedPage)page).getWebResponse().getContentAsString();
+			/*if(page instanceof UnexpectedPage){
+				String resultContent =((UnexpectedPage)page).getWebResponse().getContentAsString();
+				wc.closeAllWindows();
+				return resultContent;
 			}else{
-				return ((HtmlPage)page).asXml();
-			}
-			
-			
+				wc.closeAllWindows();
+				String resultContent =((HtmlPage)page).asXml();
+				return resultContent;
+			}*/
+		    
+		    if (status==200) {  
+		        if (page.isHtmlPage()) {  
+		             responseContent = ((HtmlPage) page).asXml(); 
+		        } else {  
+		            responseContent = webResponse.getContentAsString();  
+		        }  
+		    }  
+		    // 关闭响应流  
+		    webResponse.cleanUp();  
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (FailingHttpStatusCodeException e) {
@@ -103,9 +128,8 @@ public class HtmlUnitUtil {
 			e.printStackTrace();
 		} catch (Exception e){
 			e.printStackTrace();
-		}
-		return null;
-		
+		} 
+		return responseContent;
 	}
 	
 	public static List<com.gargoylesoftware.htmlunit.util.NameValuePair> translateParams(
@@ -121,12 +145,10 @@ public class HtmlUnitUtil {
 	/**
 	 * webClient
 	 * @return
-	 */
+	 *//*
 	public  static WebClient WebClientInit(){
 		//WebClient wc = new WebClient(BrowserVersion.FIREFOX_24);
 		WebClient wc = new WebClient(BrowserVersion.getDefault());
-
-		
 		wc.getCookieManager().setCookiesEnabled(true);
 		wc.getOptions().setJavaScriptEnabled(true);
 		wc.getOptions().setActiveXNative(false);
@@ -136,6 +158,37 @@ public class HtmlUnitUtil {
 		wc.getOptions().setDoNotTrackEnabled(false);
 		wc.getOptions().setTimeout(20000);
 		wc.setJavaScriptTimeout(20000);
+		return wc;
+	}*/
+	
+	/**
+	 * webClient
+	 * @return
+	 */
+	public  static WebClient WebClientInit(){
+		/*//WebClient wc = new WebClient(BrowserVersion.FIREFOX_24);
+		WebClient wc = new WebClient(BrowserVersion.getDefault());
+		wc.getCookieManager().setCookiesEnabled(true);
+		wc.getOptions().setJavaScriptEnabled(true);
+		wc.getOptions().setActiveXNative(false);
+		wc.getOptions().setCssEnabled(false);
+		wc.getOptions().setThrowExceptionOnScriptError(false);
+		wc.getOptions().setThrowExceptionOnFailingStatusCode(false);
+		wc.getOptions().setDoNotTrackEnabled(false);
+		wc.getOptions().setTimeout(20000);
+		wc.setJavaScriptTimeout(20000);*/
+		if(wc==null){
+			wc = new WebClient(BrowserVersion.getDefault());
+			wc.getCookieManager().setCookiesEnabled(true);
+			wc.getOptions().setJavaScriptEnabled(true);
+			wc.getOptions().setActiveXNative(false);
+			wc.getOptions().setCssEnabled(false);
+			wc.getOptions().setThrowExceptionOnScriptError(false);
+			wc.getOptions().setThrowExceptionOnFailingStatusCode(false);
+			wc.getOptions().setDoNotTrackEnabled(false);
+			wc.getOptions().setTimeout(20000);
+			wc.setJavaScriptTimeout(20000);
+		} 
 		return wc;
 	}
 	

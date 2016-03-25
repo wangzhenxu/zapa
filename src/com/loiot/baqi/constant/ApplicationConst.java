@@ -36,6 +36,12 @@ public class ApplicationConst {
 	 */
 	private static ResourceBundle messageBundle = PropertyResourceBundle.getBundle("conf/message" );
 
+	
+	 /**
+     * 访问域名
+     */
+    public static final String ACCESS_DOMAIN=appBundle.getString("access.domain");
+
     /**
      * 简历上传路径
      */

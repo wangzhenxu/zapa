@@ -84,17 +84,17 @@ public class DictionaryUtil {
 	public static List<ZpDictionaryInfo> queryDicAll(){
 		String jsonStr;
 		List<ZpDictionaryInfo> dictList=null;
-		try {
+		/*try {
 			jsonStr = FileUtil.readFileToString(new File("d:\\dictList.txt"));
 		    dictList=JsonUtil.toList(jsonStr, ZpDictionaryInfo.class);
 		//List<ZpDictionaryInfo> dictList= maps.get(Const.SESSION_DICTIONARYS_KEY);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
-		//Map<String,List> maps = IndexInfoSingleTon.getInstance().getIndexInfoMap();
-		//List<ZpDictionaryInfo> dictList= maps.get(Const.SESSION_DICTIONARYS_KEY);
+		Map<String,List> maps = IndexInfoSingleTon.getInstance().getIndexInfoMap();
+		dictList= maps.get(Const.SESSION_DICTIONARYS_KEY);
 	
 		return dictList;
 	}

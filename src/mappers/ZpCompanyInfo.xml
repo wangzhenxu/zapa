@@ -21,8 +21,11 @@
 	        	<result  column="coord_x" property="coordX" />
 	        	<result  column="coord_y" property="coordY" />
 	        	<result  column="area_id" property="areaId" />
-	        	
         	    <result  column="inPersonName" property="inPersonName" />
+	        	<result  column="inPersonName" property="inPersonName" />
+	        	<result  column="hd_code" property="hdCode" />
+		       	<result  column="source" property="source" />
+	
 	</resultMap>
 	
 	<!-- 查询 客户信息列表 -->
@@ -60,7 +63,9 @@
 						 		
 						 		ci.area_id,
 			        	
-								a.username as inPersonName
+								a.username as inPersonName,
+								ci.hd_code,
+								ci.source
 		FROM
 			zp_company_info ci
 			left join account a on a.account_id = ci.in_person
@@ -116,6 +121,13 @@
 				        	<if test="areaId != null and areaId !='' ">
 				        		AND ci.area_id=#{areaId} 
 				        	</if>
+				        	<if test="source != null and source !='' ">
+				        		AND ci.source=#{source} 
+				        	</if>
+				        	<if test="hdCode != null and hdCode !='' ">
+				        		AND ci.hd_code=#{hdCode} 
+				        	</if>
+				        	
 					
 					<if test="ids !=null">
 				         AND ci.company_id IN
@@ -188,6 +200,12 @@
 				        	<if test="areaId != null and areaId !=''">
 				        		AND ci.area_id=#{areaId} 
 				        	</if>
+				        	<if test="source != null and source !='' ">
+				        		AND ci.source=#{source} 
+				        	</if>
+				        	<if test="hdCode != null and hdCode !='' ">
+				        		AND ci.hd_code=#{hdCode} 
+				        	</if>
 				<if test="ids !=null">
 				         AND ci.company_id IN
 						    <foreach  item="item" collection="ids"  index="index" open="(" separator="," close=")"> 
@@ -247,7 +265,12 @@
 		        	<if test="areaId != null">
 		        		area_id,
 		        	</if>
-		        	
+		        	<if test="source != null">
+		        		source,
+		        	</if>
+		        	<if test="hdCode != null">
+		        		hd_code,
+		        	</if>
 		        	
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -295,6 +318,12 @@
 			        	</if>
 			        	<if test="areaId != null">
 			        		#{areaId},
+			        	</if>
+			        	<if test="source != null">
+		        			#{source},
+		        		</if>
+			        	<if test="hdCode!= null">
+			        		#{hdCode},
 			        	</if>
 		</trim>
 	</insert>
@@ -347,6 +376,13 @@
 			        	</if>
 			        	<if test="areaId != null">
 			        		area_id=#{areaId},
+			        	</if>
+			        	
+			        	<if test="source != null">
+		        			source=#{source},
+		        		</if>
+			        	<if test="hdCode != null">
+			        		hd_code=#{hdCode},
 			        	</if>
 		</trim>
 		WHERE company_id=#{companyId}
@@ -426,7 +462,9 @@
 						 		ci.coord_x,
 						 		ci.coord_y,
 						 		ci.area_id,
-								a.username as inPersonName
+								a.username as inPersonName,
+								ci.hd_code,
+								ci.source
 		FROM
 			zp_company_info ci
 			left join account a on a.account_id = ci.in_person

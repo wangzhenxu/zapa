@@ -57,7 +57,9 @@ public class ZpCompanyJobInfo  implements java.io.Serializable{
 	    
 	    List<ZpCompanyJobDemandKeys> keys;
 	    
-		private int hdPositionId;//猎上id
+	    private Long hdCode;   //猎上网 职位编号
+	    private Integer source;  //职位来源
+	    private Integer  requireInterviewNum;//要求面试次数
 
 
 

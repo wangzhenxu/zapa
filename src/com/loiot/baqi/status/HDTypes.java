@@ -21,10 +21,19 @@ public class HDTypes {
 
 
     //公司规模类型
-	public static Long  getScaleId(Integer hdTypeId){
+	public static Long  getScaleId(Integer hdTypeId) {
 		Long value=null;
 		if(hdTypeId==null){
 			value= null;
+		}
+		else
+		if(hdTypeId.intValue()==-1){//未知
+			value=DictionaryUtil.getCode(DictionaryType.COMPANY_SCALE.getCode(), Const.ZERO);
+		}
+		else
+			
+		if(hdTypeId.intValue()==0){//1-49
+			value=DictionaryUtil.getCode(DictionaryType.COMPANY_SCALE.getCode(), Const.ONE);
 		}else
 		if(hdTypeId.intValue()==1){//50-150
 			value=DictionaryUtil.getCode(DictionaryType.COMPANY_SCALE.getCode(), Const.TWO);
@@ -51,6 +60,7 @@ public class HDTypes {
 		else {
 			value =null;
 			log.warn("新加类型 :getScaleId:"+hdTypeId);
+			throw new ClassCastException("新加类型 :getScaleId:"+hdTypeId);
 		}
 		if(value==null){
 			log.info("getScaleId is null");
@@ -77,7 +87,12 @@ public class HDTypes {
 		Long value=null;
 		if(hdTypeId==null){
 			value= null;
-		}else
+		}
+		else
+		if(hdTypeId.intValue()==2){//天使轮 
+			value=DictionaryUtil.getCode(DictionaryType.COMPANY_FINANCING_LEVEL.getCode(), Const.SEVEN);
+		}
+		else
 		if(hdTypeId.intValue()==3){//A轮 
 			value=DictionaryUtil.getCode(DictionaryType.COMPANY_FINANCING_LEVEL.getCode(), Const.ONE);
 		}else
@@ -106,6 +121,7 @@ public class HDTypes {
 		else {
 			value =null;
 			log.warn("新加类型 :getFinancingLevel:"+hdTypeId);
+			throw new ClassCastException("新加类型 :getFinancingLevel:"+hdTypeId);
 		}
 		if(value==null){
 			log.info("getFinancingLevel is null");
@@ -121,14 +137,28 @@ public class HDTypes {
 			value= null;
 		}else{
 			String industaryId = hdTypeId.split(",")[0];
-			if(industaryId.equals("10103")){ //互联网
-				value=DictionaryUtil.getCode(DictionaryType.COMPANY_NATURE.getCode(), Const.SEVEN);
+			
+			if(industaryId.equals("10103")  || industaryId.equals("10101")  ){ //互联网
+				value=DictionaryUtil.getCode(DictionaryType.COMPANY_INDUSTRY.getCode(), Const.SEVEN);
 			}else
 			if(industaryId.equals("10104")){ //软件/IT服务
-				value=DictionaryUtil.getCode(DictionaryType.COMPANY_NATURE.getCode(), Const.EIGHT);
-			}else {
+				value=DictionaryUtil.getCode(DictionaryType.COMPANY_INDUSTRY.getCode(), Const.EIGHT);
+			}else
+			if(industaryId.equals("10603")){ //基金/证券/期货/投资，专业服务(咨询/财会/法律/翻译等)
+				value=DictionaryUtil.getCode(DictionaryType.COMPANY_INDUSTRY.getCode(), Const.THREE);
+			}
+			else
+			if(industaryId.equals("10404")){ //家具/家电，贸易/进出口
+				value=DictionaryUtil.getCode(DictionaryType.COMPANY_INDUSTRY.getCode(), Const.SIX);
+			}
+			else
+			if(industaryId.equals("10401")){ //食品饮料(快消)
+				value=DictionaryUtil.getCode(DictionaryType.COMPANY_INDUSTRY.getCode(), Const.SIX);
+			}
+			else {
 				value =null;
 				log.warn("新加类型 :getIndustryId:"+hdTypeId);
+				throw new ClassCastException("新加类型 :getIndustryId:"+hdTypeId);
 			}
 		}
 		if(value==null){
@@ -147,16 +177,15 @@ public class HDTypes {
 		if(hdTypeId.intValue()==0){//外商独资/外企办事处
 			value=DictionaryUtil.getCode(DictionaryType.COMPANY_NATURE.getCode(), Const.SEVEN);
 		}else
+		if(hdTypeId.intValue()==1){//国内上市公司
+			value=DictionaryUtil.getCode(DictionaryType.COMPANY_NATURE.getCode(), Const.FIVE);
+		}
+		else
 		if(hdTypeId.intValue()==5){//民营
 			value=DictionaryUtil.getCode(DictionaryType.COMPANY_NATURE.getCode(), Const.FOUR);
 		}else
-		if(hdTypeId.intValue()==7){//其它
-			value=DictionaryUtil.getCode(DictionaryType.COMPANY_NATURE.getCode(), Const.EIGHT);
-		}
-		else {
-			value =null;
-			log.warn("新加类型 :getcompanyNature:"+hdTypeId);
-		}
+		value=DictionaryUtil.getCode(DictionaryType.COMPANY_NATURE.getCode(), Const.EIGHT);
+		
 		if(value==null){
 			log.info("getcompanyNature is null");
 		}
@@ -189,9 +218,12 @@ public class HDTypes {
 		}else
 		if(title.indexOf("资深")!=-1 || title.indexOf("高级")!=-1 || workExpRequired>=3 ){
 			value=DictionaryUtil.getCode(DictionaryType.JOB_POSITION_LEVE.getCode(), Const.THREE);
+		}else {
+			value=DictionaryUtil.getCode(DictionaryType.JOB_POSITION_LEVE.getCode(), Const.TWO);
 		}
 		if(value==null){
 			log.info("getJobPositionLevelId is null");
+			throw new ClassCastException();
 		}
 		return value;
 		
@@ -207,7 +239,7 @@ public class HDTypes {
 		if(type.intValue()==0){//不限
 			value=2l;
 		}else
-		if(type.intValue()==1){//1-3年
+		if(type.intValue()==1 || type.intValue()==2 ){//1-3年
 			job.setWorkTermStart(1);
 			job.setWorkTermEnd(3);
 			value=2l;
@@ -231,15 +263,16 @@ public class HDTypes {
 		}else {
 			value =null;
 			log.warn("新加类型 :setWorkExpRequired:"+type);
+			throw new ClassCastException("新加类型 :setWorkExpRequired:"+type);
 		}
 		if(value==null){
 			log.info("setWorkExpRequired is null");
 		}
 	}
-	//招聘人数
+	//下属人数
 	public static Integer  getDownTeamPersonCount(String title){
 		Integer value=null;
-		if(StringUtils.isBlank(title)){
+		if(StringUtils.isBlank(title) || "无".equals(title) ){
 			value= null;
 		}else
 		if(title.split("-").length==1){
@@ -267,6 +300,7 @@ public class HDTypes {
 		}else {
 			value =null;
 			log.warn("新加类型 :getSexId:"+type);
+			throw new ClassCastException("新加类型 :getSexId:"+type);
 		}
 		/*if(value==null){
 			log.info("getSexId is null");
@@ -283,16 +317,17 @@ public class HDTypes {
 			value=DictionaryUtil.getCode(DictionaryType.EDUCATION.getCode(), Const.ONE);
 		}else
 		if(type.intValue()==2){//本科以上
-			value=DictionaryUtil.getCode(DictionaryType.SEX.getCode(), Const.TWO);
+			value=DictionaryUtil.getCode(DictionaryType.EDUCATION.getCode(), Const.TWO);
 		}else
 		if(type.intValue()==3){//硕士以上
-			value=DictionaryUtil.getCode(DictionaryType.SEX.getCode(), Const.THREE);
+			value=DictionaryUtil.getCode(DictionaryType.EDUCATION.getCode(), Const.THREE);
 		}else
 		if(type.intValue()==4){//博士以上
-			value=DictionaryUtil.getCode(DictionaryType.SEX.getCode(), Const.FOUR);
+			value=DictionaryUtil.getCode(DictionaryType.EDUCATION.getCode(), Const.FOUR);
 		}else {
 			value =null;
 			log.warn("新加类型 :getEducationId:"+type);
+			throw new ClassCastException("新加类型 :getEducationId:"+type);
 		}
 		if(value==null){
 			log.info("getEducationId is null");
@@ -329,6 +364,7 @@ public class HDTypes {
 		}else {
 			value =null;
 			log.warn("新加类型 :getZpUrgencyStatusId:"+type);
+			throw new ClassCastException("新加类型 :getZpUrgencyStatusId:"+type);
 		}
 		if(value==null){
 			log.info("getZpUrgencyStatusId is null");
@@ -339,8 +375,7 @@ public class HDTypes {
 	
 	
 	public static void main(String[] args) {
-		Integer count = HDTypes.getDownTeamPersonCount("5-10");
-		System.out.println("下属人数："+count);
+		 HDTypes.getScaleId(Integer.parseInt("10"));
 	}
 	
 	

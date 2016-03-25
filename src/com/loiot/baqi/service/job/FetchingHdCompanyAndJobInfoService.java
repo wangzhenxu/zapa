@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +25,16 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.loiot.baqi.constant.ApplicationConst;
+import com.loiot.baqi.constant.Const;
 import com.loiot.baqi.constant.DictionaryUtil;
 import com.loiot.baqi.dao.ZpCompanyInfoDao;
 import com.loiot.baqi.dao.ZpCompanyJobInfoDao;
 import com.loiot.baqi.pojo.ZpCompanyInfo;
 import com.loiot.baqi.pojo.ZpCompanyJobInfo;
 import com.loiot.baqi.pojo.ZpDictionaryInfo;
+import com.loiot.baqi.status.CompanyJobSourceType;
+import com.loiot.baqi.status.CompanySourceType;
 import com.loiot.baqi.status.DictionaryType;
 import com.loiot.baqi.status.HDTypes;
 import com.loiot.baqi.status.PauseStartType;
@@ -68,6 +73,8 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
     		
     		//log.info("ffffffffffffffffffffffffffffffffffffffffff");
 			paseHdSiteInfo();
+			
+			log.info("任务执行完毕");
     		
     		/*String ccsJson =FileUtil.readFileToString(new File("d:\\companyAndJobAll.txt"));
     		List<ComapnyAndComapnyJob> ccs =JsonUtil.toList(ccsJson, ComapnyAndComapnyJob.class);
@@ -81,14 +88,15 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 
     public  String getCoordInfoForHttp(String coordListJson) throws FailingHttpStatusCodeException, MalformedURLException, IOException{
 		 //String  homeJson =FileUtil.readFileToString(new File("d:\\home_job.txt"));
-    	if(StringUtil.isBlank(coordListJson)){
+    	/*if(StringUtil.isBlank(coordListJson)){
    		 	coordListJson =FileUtil.readFileToString(new File("d:\\coordListJson.txt"));
     	}else{
         	FileUtil.writeStringToFile("d:\\coordListJson.txt", coordListJson);
-    	}
-    	String url = "http://www.ds.com:8080/getAreaCoordInfo.action";  
+    	}*/
+    	String url = ApplicationConst.ACCESS_DOMAIN+"getAreaCoordInfo.action";  
     	WebClient webClient = HtmlUnitUtil.WebClientInit();
 		WebRequest req = new WebRequest(new URL(url), HttpMethod.POST);
+		req.setCharset("utf-8");
 		Map<String, String > params=new HashMap<String,String>();
 		params.put("coordListJson", coordListJson);
 		params.put("a", "中国");
@@ -147,7 +155,29 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 		if(1==0){
 			return;
 		}
-		String url4 = "http://hd.hunteron.com/api/v1/position/getHomepagePositions?_t="+System.currentTimeMillis()+"&size=2";
+		
+		String priority="priority=2&";
+		priority="";
+		
+		//java
+		String url4 = "http://hd.hunteron.com/api/v1/position/query?_t="+System.currentTimeMillis()+"&cityId=30101&"+priority+"query=Java&size=15&start=0";
+		paseHdSiteInfo(url4,DictionaryUtil.getCode(DictionaryType.JOB_POSITION.getCode(), Const.ONE));
+		
+		//PHP
+		url4 = "http://hd.hunteron.com/api/v1/position/query?_t="+System.currentTimeMillis()+"&cityId=30101&"+priority+"query=PHP&size=15&start=0";
+		paseHdSiteInfo(url4,DictionaryUtil.getCode(DictionaryType.JOB_POSITION.getCode(), Const.TWO));
+		
+		//Android
+		url4 = "http://hd.hunteron.com/api/v1/position/query?_t="+System.currentTimeMillis()+"&cityId=30101&"+priority+"query=Android&size=15&start=0";
+		paseHdSiteInfo(url4,DictionaryUtil.getCode(DictionaryType.JOB_POSITION.getCode(), Const.THREE));
+		
+		
+	}
+	
+	public void  paseHdSiteInfo(String positionURL,Long typeId){
+		//String url4 = "http://hd.hunteron.com/api/v1/position/getHomepagePositions?_t="+System.currentTimeMillis()+"&size=2";
+		String url4= positionURL;
+		
 		String homeJson = HtmlUnitUtil.webClientGet(url4,1000,2000); //获取企业信息
 		
 		  
@@ -162,10 +192,14 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 			     Root homeRoot = JsonUtils.fromJsonToObject(homeJson.trim(), Root.class);
 			     int i=0;
 			     for(Position p :homeRoot.getData().getPositions()){
-			    	 i++;
-			    	 if(i==5){
-			    		 break;
+			    	 //0：需要申请 1：不需要申请 2：不能申请-->
+			    	 if(p.getPositionType()!=1){
+			    		continue;
 			    	 }
+			    	/* i++;
+			    	 if(i==10){
+			    		 break;
+			    	 }*/
 			    	 
 			    	 
 			    	 String url5="http://hd.hunteron.com/api/v1/position/detail?_t="+System.currentTimeMillis()+"&positionId="+p.getPositionId();
@@ -176,19 +210,19 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 			 		 Enterprise enterBean = enterMap.get(String.valueOf(p.getEnterpriseId()));
 					 
 			 		 System.out.println("start companyJob:"+p.getPositionId());
-			 		 ZpCompanyJobInfo companyJob = convertCompanyJobInfoPoToLocalBean(root.getData().getPosition(), 25l,enterBean.getHighlights());
+			 		 ZpCompanyJobInfo companyJob = convertCompanyJobInfoPoToLocalBean(root.getData().getPosition(), typeId,enterBean.getHighlights());
 					 System.out.println(companyJob);
 			 		 System.out.println("end companyJob:"+p.getPositionId());
 			 		 
-			 		 System.out.println("start company:"+p.getEnterpriseId());
+			 		 //System.out.println("start company:"+p.getEnterpriseId());
 					 ZpCompanyInfo company = convertCompanyInfoPoToLocalBean(enterBean);
 					 System.out.println(company);
-			 		 System.out.println("end company:"+p.getEnterpriseId());
+			 		 //System.out.println("end company:"+p.getEnterpriseId());
 			 		
 			 		//坐标集合
 			 		CoordInfo coord = new CoordInfo();
 			 		coord.setHdLocation(companyJob.getAddress());
-			 		coord.setHdPositionId(companyJob.getHdPositionId());
+			 		coord.setHdPositionId(Integer.parseInt(companyJob.getHdCode().toString()));
 			 		positons.add(coord);
 			 		
 			 		ComapnyAndComapnyJob cs = new ComapnyAndComapnyJob();
@@ -199,42 +233,48 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 			     }
 			     
 			     setCoordInfo(ccs, positons);
-			     FileUtil.writeStringToFile("d:\\companyAndJobAll.txt", JsonUtil.toJson(ccs));
+			     //FileUtil.writeStringToFile("d:\\companyAndJobAll.txt", JsonUtil.toJson(ccs));
+		    	 this.persistenceInfoToDataBase(ccs);
+
 		   } catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			String f="";
-		
 	}
 	
 	public void persistenceInfoToDataBase(List<ComapnyAndComapnyJob> ccs){
+		Collections.reverse(ccs);//集合倒转
 		for(ComapnyAndComapnyJob cj : ccs){
 			HashMap<String, Object> pMap= new HashMap<String,Object>();
-			pMap.put("name", cj.getCompany().getName());
+			pMap.put("hdCode", cj.getCompany().getHdCode());
+			pMap.put("source",CompanySourceType.HD.getCode());
 			try {
 				List<ZpCompanyInfo> companyList = this.zpCompanyInfoDao.queryZpCompanyInfoList(pMap);
 				ZpCompanyInfo company = cj.getCompany();
 				company.setLastUpdateTime(new Date());
 				company.setInPerson(1l);
 				
-				ZpCompanyJobInfo companJob = cj.getCompanyJob();
-				companJob.setInPerson(1l);
-				companJob.setInDatetime(new Date());
-				companJob.setLastUpdateTime(new Date());
-				if(companyList!=null && companyList.size()==0){
+				ZpCompanyJobInfo companyJob = cj.getCompanyJob();
+				companyJob.setInPerson(1l);
+				companyJob.setInDatetime(new Date());
+				companyJob.setLastUpdateTime(new Date());
+				if(companyList==null || companyList.size()==0){
 					this.zpCompanyInfoDao.addZpCompanyInfo(company);
-					companJob.setCompanyId(company.getCompanyId());
-					this.zpCompanyJobInfoDao.addZpCompanyJobInfo(companJob);
-				}else{
-					pMap.clear();
-					pMap.put("companyId", companyList.get(0).getCompanyId());
-					pMap.put("name",companJob.getName());
-					List<ZpCompanyJobInfo> companyJobList = this.zpCompanyJobInfoDao.queryZpCompanyJobInfoList(pMap);
-					if(companyJobList==null || companyJobList.size()==0){
-						companJob.setCompanyId(companyList.get(0).getCompanyId());
-						this.zpCompanyJobInfoDao.addZpCompanyJobInfo(companJob);
+					companyJob.setCompanyId(company.getCompanyId());
+					//this.zpCompanyJobInfoDao.addZpCompanyJobInfo(companJob);
+				}
+				
+				
+				pMap.clear();
+				pMap.put("hdCode", companyJob.getHdCode());
+				pMap.put("source",CompanySourceType.HD.getCode());
+				List<ZpCompanyJobInfo> companyJobList = this.zpCompanyJobInfoDao.queryZpCompanyJobInfoList(pMap);
+				if(companyJobList==null || companyJobList.size()==0){
+					if(companyJob.getCompanyId()==null){
+						companyJob.setCompanyId(companyList.get(0).getCompanyId());
 					}
+					this.zpCompanyJobInfoDao.addZpCompanyJobInfo(companyJob);
 				}
 				
 			} catch (Exception e) {
@@ -276,14 +316,15 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 		ZpCompanyInfo company=new ZpCompanyInfo();
 		company.setAddress(enterBean.getAddress());
 		company.setName(enterBean.getName());
-		company.setDesc(enterBean.getIntroduce());
+		company.setDesc("<div style=\"text-indent: 26px; white-space: pre-wrap; \">"+enterBean.getIntroduce()+"</div>");
 		company.setScaleId(HDTypes.getScaleId(enterBean.getScale()));
 		company.setRegtime(HDTypes.getRegTime(enterBean.getCreateTime()));
 		company.setFinancingLevelId(HDTypes.getFinancingLevel(enterBean.getDevelopStatus()));
 		company.setIndustryId(HDTypes.getIndustryId(enterBean.getIndustryIds()));
 		company.setCompanyNature(HDTypes.getCompanyNature(enterBean.getStyle()));
 		company.setIsDelete((int)PauseStartType.START.getCode());
-		
+		company.setHdCode(enterBean.getEnterpriseId());
+		company.setSource((int)CompanySourceType.HD.getCode());
 		return company;
 	}
 	
@@ -299,8 +340,8 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 		job.setExpectedYearMoneyEnd(hdPosi.getMaxShowAnnualSalary());
 		HDTypes.setWorkExpRequired(hdPosi.getWorkExpRequired(), job);
 		job.setDownTeamPersonCount(HDTypes.getDownTeamPersonCount(hdPosi.getSubordinate()));
-		job.setDesc(hdPosi.getJobDescription());
-		job.setMoreDesc(hdPosi.getJobRequirement());
+		job.setDesc("<span style=\"white-space: pre-wrap; \">"+hdPosi.getJobDescription()+"</span>");
+		job.setMoreDesc("<span style=\"white-space: pre-wrap; \">"+hdPosi.getJobRequirement()+"</span>");
 		job.setSex(HDTypes.getSexId(hdPosi.getGenderRequired()));
 		job.setEducationId(HDTypes.getEducationId(hdPosi.getDegreeRequired()));
 		job.setEnglishLevelId(HDTypes.getEnglishLevelId(hdPosi.getLanguageRequired()));
@@ -309,7 +350,9 @@ public class FetchingHdCompanyAndJobInfoService extends JobTaskDefine {
 		job.setIsDelete((int)PauseStartType.START.getCode());
 		job.setAddress(hdPosi.getLocation());
 		job.setZpUrgencyStatusId(HDTypes.getZpUrgencyStatusId(hdPosi.getPriority()));
-		job.setHdPositionId(hdPosi.getPositionAssignId());
+		job.setHdCode(Long.parseLong(String.valueOf(hdPosi.getPositionId())));
+		job.setSource((int)CompanyJobSourceType.HD.getCode());
+		job.setRequireInterviewNum(hdPosi.getInterviewTimes());
 		return job;
 	}
 	

@@ -69,7 +69,7 @@ public class Position implements java.io.Serializable{
 
 	private String positionTitle;  // 职位名称 xxx工程师
 
-	private int positionType;
+	private int positionType;//0：需要申请 1：不需要申请 2：不能申请-->
 
 	private int priority;  //是否是急招 2急招  0非急招
 
@@ -102,6 +102,8 @@ public class Position implements java.io.Serializable{
 	private String languageRequired;//语言要求
 	
 	private String location;//工作地址
+	
+	private Integer interviewTimes;//企业要求面试次数
 	
 
 	

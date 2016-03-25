@@ -10,7 +10,7 @@
 <script src="/js/areaCoordInfo.js"></script>
 <script  language="javascript">	
    $(function(){
-	  var coords= ${coordListJson};
+	  var coords=${coordListJson};
 	  getCoordInfo(coords);
 	  //setLgltInfo("北京市海淀区图书城东南侧彩和坊路8号");
    });
@@ -19,6 +19,7 @@
 </head>
 
 <body>
-   <div id="coordInfo"></div>
+   <div id="coordInfo">
+   </div>
 </body>
 </html>
